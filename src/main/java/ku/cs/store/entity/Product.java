@@ -1,11 +1,10 @@
 package ku.cs.store.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -15,8 +14,25 @@ public class Product {
     @GeneratedValue
     private UUID id;
     private String name;
+
     private double price;
-    private int amount;
+
+    private int stock;
+
+    private int requireProduct;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdDateTime;
+
+    @Temporal(TemporalType.DATE)
+    private Date dateStock;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastModifiedDateTime;
+    @ManyToOne
+    private Unit unit;
     @ManyToOne
     private Category category;
-}
+    @Lob
+    @Column(columnDefinition = "MEDIUMBLOB")
+    private String  imageFile;
+ }

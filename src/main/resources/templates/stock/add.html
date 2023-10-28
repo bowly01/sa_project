@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>Store Web Application</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</head>
+
+<body>
+<div th:insert="~{fragments/header :: header}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- ครึ่งซ้าย -->
+        <div class="col-md-6 sidebar">
+            <!-- เนื้อหาส่วนครึ่งซ้าย -->
+            <table class="table table-bordered table-striped table-hover">
+                <thead class="thead-dark">
+                <tr>
+                    <th>ชื่อสินค้า</th>
+                    <th>ประเภทสินค้า</th>
+                    <th>จำนวนคงคลัง</th>
+                    <th>ราคา</th>
+                    <th>เพิ่มสต๊อก</th>
+                </tr>
+                </thead>
+<!--                <tbody>-->
+<!--                    <tr th:each="product : ${products}">-->
+<!--                        <td th:text="${product.name}"></td>-->
+<!--                        <td th:text="${product.category}"></td>-->
+<!--                        <td th:text="${product.stock}"></td>-->
+<!--                        <td style="text-align: right" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 2, 'POINT')}"></td>-->
+<!--                        <td><a class="btn btn-info" th:href="@{/products/add/{id}(id=${product.id})}">Add Stock</a></td>-->
+<!--                    </tr>-->
+<!--                </tbody>-->
+
+            </table>
+        </div>
+        <!-- ครึ่งขวา -->
+        <div class="col-md-6 content">
+            <!-- เนื้อหาส่วนครึ่งขวา -->
+            <span th:text="${productsIndex.name}"></span>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Store Web Application</title>
-    <link th:href="@{/css/styles.css}" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </head>
@@ -19,39 +18,58 @@
             <button class="btn btn-outline-secondary" type="button" onclick="searchProducts()">Search</button>
         </div>
     </div>
-<!--table-bordered table-striped table-hover-->
-    <table th:each="category : ${categories}" class="table table-bordered table-striped table-hover">
+
+    <table class="table table-bordered table-striped table-hover">
         <thead class="thead-dark">
-        <tr class="table-dark">
-            <td colspan="4"><span th:text="${category.name}"></span></td>
+        <tr>
+            <th>ชื่อสินค้า</th>
+            <th>image</th>
+            <th>จำนวนคงคลัง</th>
+            <th>จำนวนต้องการ</th>
+            <th>ราคา</th>
+            <th>แก้ไข</th>
+            <th>เพิ่มเติม</th>
         </tr>
         </thead>
-<!--        <thead class="thead-dark">-->
-        <tr>
-            <th>Product Name</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Add Stock</th>
-        </tr>
-<!--        </thead>-->
         <tbody>
         <th:block th:if="${products != null}">
-            <tr th:each="product : ${category.products}">
+
+            <tr th:each="product : ${products}">
                 <td th:text="${product.name}"></td>
-                <td th:class="${product.stock < product.requireProduct*0.2} ? 'text-bg-danger' : ''" th:text="${product.stock}"></td>
+                <!-- Assuming your product object contains the Base64-encoded image -->
+                <td><img th:src="'data:image/jpeg;base64,' + ${product.imageFile}" alt="Image Description" style="width: 100px;height: 100px;"></td>
+                <td th:text="${product.getStock}"></td>
+                <td th:text="${product.requireProduct}"></td>
+
                 <td style="text-align: right" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 2, 'POINT')}"></td>
-                <td>
-                    <a class="btn btn-info" th:href="@{/products/add/{id}(id=${product.id})}">Add Stock</a>
-                </td>
+                <td><a class="btn btn-primary" th:href="@{'/products/edit/' + ${product.id}}">Edit</a></td>
+                <td><a class="btn btn-info" th:href="@{'/info/' + ${product.id}}">Info</a></td>
             </tr>
         </th:block>
         </tbody>
-
     </table>
-
-
-
-
+    <!-- Horizontal Pagination -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:if="${page.number > 0}">
+                <a class="page-link" th:href="@{/products(page=0)}">First</a>
+            </li>
+            <li class="page-item" th:if="${page.number > 0}">
+                <a class="page-link" th:href="@{/products(page=${page.number - 1})}">Previous</a>
+            </li>
+            <th:block th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}">
+                <li class="page-item">
+                    <a class="page-link" th:href="@{/products(page=${i})}" th:text="${i + 1}"></a>
+                </li>
+            </th:block>
+            <li class="page-item" th:if="${page.number < page.totalPages - 1}">
+                <a class="page-link" th:href="@{/products(page=${page.number + 1})}">Next</a>
+            </li>
+            <li class="page-item" th:if="${page.number < page.totalPages - 1}">
+                <a class="page-link" th:href="@{/products(page=${page.totalPages - 1})}">Last</a>
+            </li>
+        </ul>
+    </nav>
 </div>
 <script>
     function searchProducts() {

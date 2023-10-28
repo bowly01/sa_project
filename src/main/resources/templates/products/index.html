@@ -11,7 +11,39 @@
 <div th:insert="~{fragments/header :: header}"></div>
 <div class="container">
 
-  <h1 class="display-6">product-view</h1>
+  <div class="container w-50 p-3">
+    <h1 class="display-6">Product Detail</h1>
+
+
+    <form action="#" th:object="${products}">
+      <div class="mb-3">
+        <label for="inputName">Name</label>
+        <input disabled th:value="${products.name}"
+               name="name" id="inputName" type="text" class="form-control">
+      </div>
+      <div class="mb-3">
+        <label for="inputPrice">Price</label>
+        <input disabled th:value="${#numbers.formatDecimal(products.price, 1, 'COMMA', 2, 'POINT')}"
+               name="price" id="inputPrice" type="text" class="form-control">
+      </div>
+    </form>
+    <br>
+
+
+    <form action="#" th:action="@{/orders/{productId}(productId=${products.id})}" method="POST">
+      <div class="mb-3">
+        <label for="inputStock">Stock</label>
+        <input id="inputStock" type="number" class="form-control"
+               name="stock" required>
+      </div>
+<!--      <div id="error-msg" class="alert alert-danger"-->
+<!--           th:if="${stockError}">-->
+<!--        <span th:text="${stockError}"></span>-->
+<!--      </div>-->
+
+      <button id="submit-button" type="submit" class="btn btn-primary">Add to Cart</button>
+    </form>
+  </div>
 
 </div>
 </body>

@@ -1,0 +1,19 @@
+/* login page*/
+/*block white*/
+.block-white-div {
+    width: 561px;
+    height: 367px;
+    flex-shrink: 0;
+    border-radius: 33px;
+    background: #FFF;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
+}
+.center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Makes the container take up the entire viewport height */
+}
+.highlighted-quantity {
+    background-color: #ff5757; /* Set the background color to red or any style you prefer */
+}

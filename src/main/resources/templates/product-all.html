@@ -14,7 +14,8 @@
         <thead class="thead-dark">
         <tr>
             <th>ชื่อสินค้า</th>
-            <th>จำนวน</th>
+            <th>จำนวนคงคลัง</th>
+            <th>จำนวนต้องการ</th>
             <th>ราคา</th>
             <th>แก้ไข</th>
             <th>เพิ่มเติม</th>
@@ -23,9 +24,11 @@
         <tbody>
         <tr th:each="product : ${category.products}">
             <td th:text="${product.name}"></td>
-            <td th:text="${product.amount}"></td>
+            <td th:text="${product.quantity}"></td>
+            <td th:text="${product.requireProduct}"></td>
+
             <td style="text-align: right" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 2, 'POINT')}"></td>
-            <<td><a class="btn btn-primary" th:href="@{'/edit/' + ${product.id}}">Edit</a></td>
+            <<td><a class="btn btn-primary" th:href="@{'/products/edit/' + ${product.id}}">Edit</a></td>
             <td><a class="btn btn-info" th:href="@{'/info/' + ${product.id}}">Info</a></td>
         </tr>
         </tbody>
