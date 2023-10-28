@@ -49,6 +49,7 @@ public class ProductService {
         record.setCreatedDateTime(new Date());
         Category category = categoryRepository.findById(product.getCategoryId()).get();
         Unit unit = unitRepository.findById(product.getUnitId()).get();
+        record.setCreatedDateTime(new Date());
         record.setUnit(unit);
         record.setCategory(category);
         try {
@@ -69,6 +70,7 @@ public class ProductService {
         // Update the stock
         int newStock = product.getStock() + amountToAdd*quantityPerUnit;
         product.setStock(newStock);
+        product.setDateStock(new Date());
 
         // Save the updated product back to the database
         return productRepository.save(product);
@@ -85,19 +87,26 @@ public class ProductService {
 //        }
 //        return null;
 //    }
-    public void updateProduct(UUID id, ProductRequest updatedProduct, MultipartFile imageFile) {
-    Product existingProduct = productRepository.findById(id).orElse(null);
-    Category category = categoryRepository.findById(updatedProduct.getCategoryId()).get();
-    existingProduct.setName(updatedProduct.getName());
+    public void updateProduct(ProductRequest updatedProduct, MultipartFile imageFile,UUID id) {
+
+        Product existingProduct = productRepository.findByName(updatedProduct.getName()).orElseThrow();
+        existingProduct.setId(id);
+        Unit unit = unitRepository.findById(updatedProduct.getUnitId()).get();
+        existingProduct.setUnit(unit);
+        Category category = categoryRepository.findById(updatedProduct.getCategoryId()).get();
+        existingProduct.setName(updatedProduct.getName());
         existingProduct.setPrice(updatedProduct.getPrice());
-        //existingProduct.setStock(updatedProduct.getStock());
+        existingProduct.setLastModifiedDateTime(new Date());
         existingProduct.setRequireProduct(updatedProduct.getRequireProduct());
-        try {
-            byte[] imageBytes = imageFile.getBytes();
-            String base64Image = Base64.getEncoder().encodeToString(imageBytes);
-            existingProduct.setImageFile(base64Image);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(!imageFile.isEmpty()) {
+            try {
+                byte[] imageBytes = imageFile.getBytes();
+                String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+                existingProduct.setImageFile(base64Image);
+            } catch (IOException e) {
+                e.printStackTrace();
+        }
+
     }
         existingProduct.setCategory(category);
 

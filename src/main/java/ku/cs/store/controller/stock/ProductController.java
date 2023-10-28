@@ -2,7 +2,6 @@ package ku.cs.store.controller.stock;
 
 import ku.cs.store.model.ProductRequest;
 import ku.cs.store.entity.Product;
-import ku.cs.store.repository.ProductRepository;
 import ku.cs.store.service.CategoryService;
 import ku.cs.store.service.ProductService;
 import ku.cs.store.service.UnitService;
@@ -11,12 +10,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.util.StringUtils;
 
-import java.io.IOException;
 import java.util.UUID;
 
 @Controller
@@ -59,15 +55,18 @@ public class ProductController {
     public String getProductToEdit(@PathVariable UUID id,Model model) {
         model.addAttribute("products", productService.getOneById(id));
         model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("units", unitService.getAllUnit());
+        System.out.println("at edit get");
+
         return "products/edit";
     }
-    @PutMapping ("/edit/{id}")
-    public String updateProduct(@PathVariable UUID id, ProductRequest updatedProduct, @RequestParam("imageFile") MultipartFile imageFile, Model model) {
+    @PostMapping ("/edit/{id}")
+    public String updateProduct(@PathVariable UUID id,@ModelAttribute ProductRequest productRequest, @RequestParam("imageFile") MultipartFile imageFile, Model model) {
         // Implement the update logic here, including updating the database and handling image uploads.
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("units", unitService.getAllUnit());
 
-        productService.updateProduct(id, updatedProduct, imageFile);
+        productService.updateProduct(productRequest, imageFile, id);
         return "redirect:/products";
     }
     @GetMapping("/create")

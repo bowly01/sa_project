@@ -20,21 +20,19 @@
                 <thead class="thead-dark">
                 <tr>
                     <th>ชื่อสินค้า</th>
-                    <th>ประเภทสินค้า</th>
                     <th>จำนวนคงคลัง</th>
                     <th>ราคา</th>
                     <th>เพิ่มสต๊อก</th>
                 </tr>
                 </thead>
-<!--                <tbody>-->
-<!--                    <tr th:each="product : ${products}">-->
-<!--                        <td th:text="${product.name}"></td>-->
-<!--                        <td th:text="${product.category}"></td>-->
-<!--                        <td th:text="${product.stock}"></td>-->
-<!--                        <td style="text-align: right" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 2, 'POINT')}"></td>-->
-<!--                        <td><a class="btn btn-info" th:href="@{/products/add/{id}(id=${product.id})}">Add Stock</a></td>-->
-<!--                    </tr>-->
-<!--                </tbody>-->
+                <tbody>
+                    <tr th:each="product : ${products}">
+                        <td th:text="${product.name}"></td>
+                        <td th:text="${product.stock}"></td>
+                        <td style="text-align: right" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 2, 'POINT')}"></td>
+                        <td><a class="btn btn-info" th:href="@{/products/add/{id}(id=${product.id})}">Add Stock</a></td>
+                    </tr>
+                </tbody>
 
             </table>
         </div>

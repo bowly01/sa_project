@@ -12,10 +12,10 @@
 <div th:insert="~{fragments/header :: header}"></div>
 <h1>Edit Product</h1>
 
-<form th:object="${products}" action="#" th:action="@{/products/edit/${products.id}}" method="PUT" enctype="multipart/form-data">
+<form th:object="${products}" action="#" th:action="@{/products/edit/{id}(id=${id},final='products.id')}" method="POST" enctype="multipart/form-data">
   <div class="mb-3">
     <label for="inputName">Name</label>
-    <input id="inputName" type="text" class="form-control" th:field="*{name}">
+    <input id="inputName" type="text" class="form-control" name="name" th:value="${products.name}">
   </div>
   <div class="mb-3">
     <label for="inputCategory">Category</label>
@@ -36,9 +36,12 @@
 
   </div>
   <div class="mb-3">
-    <label for="inputStock">Stock</label>
-    <input id="inputStock" type="number" class="form-control" name="stock" th:value="${products.stock}" required>
-
+    <label for="inputUnit">Unit</label>
+    <select class="form-control" id="inputUnit" name="UnitId">
+      <option th:each="unit : ${units}"
+              th:value="${unit.id}" th:text="${unit.name}">
+      </option>
+    </select>
   </div>
 
   <div class="mb-3">

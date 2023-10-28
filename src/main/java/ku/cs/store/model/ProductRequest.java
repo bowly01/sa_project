@@ -16,8 +16,6 @@ public class ProductRequest {
     private UUID categoryId;
     @Column(name = "price")
     private double price;
-    @Column(name = "stock")
-    private int stock;
     @Column(name = "unit")
     private Long unitId;
     @Column(name = "requireProduct")
