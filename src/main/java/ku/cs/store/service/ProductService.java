@@ -1,27 +1,18 @@
 package ku.cs.store.service;
 
-import ku.cs.store.entity.Product;
-import ku.cs.store.entity.Category;
-import ku.cs.store.entity.Unit;
+import ku.cs.store.entity.*;
 import ku.cs.store.model.ProductRequest;
 import ku.cs.store.repository.CategoryRepository;
 import ku.cs.store.repository.ProductRepository;
 import ku.cs.store.repository.UnitRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 @Service
@@ -60,9 +51,23 @@ public class ProductService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        productRepository.save(record);
-    }
 
+
+        // Save the product
+        productRepository.save(record);
+
+    }
+    public void deleteProductById(UUID productId){
+        Optional<Product> productOptional = productRepository.findById(productId);
+
+        if (productOptional.isPresent()) {
+            Product product = productOptional.get();
+            productRepository.delete(product);
+        } else {
+            // Handle the case where the product with the given ID doesn't exist
+            // You can throw an exception or handle it in some other way.
+        }
+    }
 
     public void addStock(UUID productId, int amountToAdd, Long unitId) {
         // Retrieve the product from the database

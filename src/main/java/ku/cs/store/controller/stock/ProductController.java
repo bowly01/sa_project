@@ -1,10 +1,13 @@
 package ku.cs.store.controller.stock;
 
+import ku.cs.store.entity.Member;
 import ku.cs.store.model.ProductRequest;
 import ku.cs.store.service.CategoryService;
 import ku.cs.store.service.ProductService;
 import ku.cs.store.service.UnitService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +44,7 @@ public class ProductController {
     @PostMapping ("/edit/{id}")
     public String updateProduct(@PathVariable UUID id,@ModelAttribute ProductRequest productRequest, @RequestParam("imageFile") MultipartFile imageFile, Model model) {
         // Implement the update logic here, including updating the database and handling image uploads.
-        if (productService.productNameIsExisted(productRequest)) {
+        if (productService.productNameIsExisted(productRequest)&&(!productRequest.getName().equals(productService.getOneById(id).getName()))) {
             model.addAttribute("products", productService.getOneById(id));
             model.addAttribute("categories", categoryService.getAllCategories());
             model.addAttribute("nameError","มีสินค้าชื้อนี้แล้ว");
@@ -49,7 +52,7 @@ public class ProductController {
             return "products/edit";
         }
         productService.updateProduct(productRequest, imageFile, id);
-        return "redirect:/products";
+        return "redirect:/inventory";
     }
     @GetMapping("/create")
     public String getProductForm(Model model,ProductRequest productRequest) {
@@ -73,6 +76,15 @@ public class ProductController {
         productService.createProduct(productRequest, file);
         model.addAttribute("units", unitService.getAllUnit());
         model.addAttribute("categories", categoryService.getAllCategories());
+        return "redirect:/inventory";
+    }
+    @PostMapping("/delete/{id}")
+    public String deleteProduct(@PathVariable UUID id, @ModelAttribute ProductRequest productRequest, Model model){
+        productService.deleteProductById(id);
+        model.addAttribute("units", unitService.getAllUnit());
+        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("product", productRequest);
+
         return "redirect:/inventory";
     }
 }

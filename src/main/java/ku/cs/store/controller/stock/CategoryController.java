@@ -32,14 +32,14 @@ public class CategoryController {
         }
         categoryService.createCategory(category);
         model.addAttribute("categories", categoryService.getAllCategories());
-        return "redirect:/products";
+        return "redirect:/inventory";
     }
     // not yet
-    @DeleteMapping("/add")
+    @PostMapping("/delete")
     public String deleteCategory(@ModelAttribute CategoryRequest category,
                                  Model model){
         categoryService.createCategory(category);
         model.addAttribute("categories", categoryService.getAllCategories());
-        return "redirect:/products";
+        return "redirect:/inventory";
     }
 }

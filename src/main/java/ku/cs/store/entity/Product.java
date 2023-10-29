@@ -35,4 +35,5 @@ public class Product {
     @Lob
     @Column(columnDefinition = "MEDIUMBLOB")
     private String  imageFile;
+
  }

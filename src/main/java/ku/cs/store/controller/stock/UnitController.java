@@ -26,6 +26,6 @@ public class UnitController {
         }
         unitService.createUnit(unit);
         model.addAttribute("units",unitService.getAllUnit());
-        return "redirect:/products";
+        return "redirect:/inventory";
     }
 }

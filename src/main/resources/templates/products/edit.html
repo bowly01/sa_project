@@ -10,8 +10,9 @@
 
 <body>
 <div th:insert="~{fragments/header :: header}"></div>
-<h1>Edit Product</h1>
 
+<div class="container">
+  <h1>Edit Product</h1>
 <form th:object="${products}" action="#" th:action="@{/products/edit/{id}(id=${id},final='products.id')}" method="POST" enctype="multipart/form-data">
   <div class="mb-3">
     <label for="inputName">Name</label>
@@ -56,7 +57,7 @@
 
   <input type="submit" value="Update Product">
 </form>
-
+</div>
 </body>
 
 </html>

@@ -43,7 +43,13 @@
 
                 <td style="text-align: right" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 2, 'POINT')}"></td>
                 <td><a class="btn btn-primary" th:href="@{'/products/edit/' + ${product.id}}">Edit</a></td>
-                <td><a class="btn btn-info" th:href="@{'/info/' + ${product.id}}">Info</a></td>
+                <td><!-- Add the "Delete" button within a form -->
+                    <form th:action="@{'/products/delete/' + ${product.id}}" method="post">
+                        <input type="hidden" name="_method" value="delete" />
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+
             </tr>
         </th:block>
         </tbody>
