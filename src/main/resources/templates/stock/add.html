@@ -50,7 +50,7 @@
                         <label for="inputUnit">Unit</label>
                         <select class="form-control" id="inputUnit" name="unitId">
                             <option th:each="unit : ${units}"
-                                    th:value="${unit.id}" th:text="${unit.name}">
+                                    th:value="${unit.id}" th:text="${unit.name}+${unit.quantity}">
                             </option>
                         </select>
                     </div>

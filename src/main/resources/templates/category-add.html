@@ -19,6 +19,10 @@
       <label for="inputName">Category Name</label>
       <input id="inputName" type="input" class="form-control"
              name="name">
+      <div id="error-msg" class="alert alert-danger"
+           th:if="${nameError}">
+        <span th:text="${nameError}"></span>
+      </div>
     </div>
     <button id="submit-button" type="submit" class="btn btn-primary">Add Category</button>
   </form>

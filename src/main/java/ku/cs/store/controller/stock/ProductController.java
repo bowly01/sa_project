@@ -99,7 +99,7 @@ public class ProductController {
         if (productService.productNameIsExisted(productRequest)) {
             model.addAttribute("categories", categoryService.getAllCategories());
             model.addAttribute("units", unitService.getAllUnit());
-            model.addAttribute("nameError","มีสินค้าชื้อนี้แล้ว");
+            model.addAttribute("nameError","มีสินค้าชื่อนี้แล้ว");
             return "products/create"; // Return to the form with a specific error message
         }
 

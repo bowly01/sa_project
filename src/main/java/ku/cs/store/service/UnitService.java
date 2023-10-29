@@ -3,12 +3,14 @@ package ku.cs.store.service;
 import ku.cs.store.entity.Category;
 import ku.cs.store.entity.Unit;
 import ku.cs.store.model.CategoryRequest;
+import ku.cs.store.model.ProductRequest;
 import ku.cs.store.repository.UnitRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UnitService {
@@ -30,6 +32,9 @@ public class UnitService {
     public void deleteUnit(Unit unit){
         Unit record = modelMapper.map(unit, Unit.class);
         unitRepository.save(record);    }
-
+    public boolean unitNameIsExisted(Unit unit) {
+        Optional<Unit> existingUnit = unitRepository.findByName(unit.getName());
+        return existingUnit.isPresent();
+    }
 
 }

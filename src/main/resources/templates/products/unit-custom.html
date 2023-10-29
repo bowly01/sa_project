@@ -17,6 +17,10 @@
             <label for="inputName">Unit Name</label>
             <input id="inputName" type="input" class="form-control"
                    name="name">
+            <div id="error-msg" class="alert alert-danger"
+                 th:if="${nameError}">
+                <span th:text="${nameError}"></span>
+            </div>
         </div>
         <div class="mb-3">
             <label for="inputQuantity">Quantity Per Unit</label>

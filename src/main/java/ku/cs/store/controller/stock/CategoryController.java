@@ -26,6 +26,10 @@ public class CategoryController {
     @PostMapping("/add")
     public String createCategory(@ModelAttribute CategoryRequest category,
                                  Model model) {
+        if(categoryService.categoryNameIsExisted(category)){
+            model.addAttribute("nameError","มีประเภทสินค้าชื่อนี้แล้ว");
+            return "category-add";
+        }
         categoryService.createCategory(category);
         model.addAttribute("categories", categoryService.getAllCategories());
         return "redirect:/products";

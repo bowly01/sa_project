@@ -108,10 +108,6 @@ public class ProductService {
         Optional<Product> existingProduct = productRepository.findByName(productRequest.getName());
         return existingProduct.isPresent();
     }
-    public boolean isProductNameUnique(String name) {
-        Optional<Product> productsWithSameName = productRepository.findByName(name);
-        return productsWithSameName.isEmpty();
-    }
 
     public Page<Product> findAll(Pageable pageable) {
         return productRepository.findAll(pageable);

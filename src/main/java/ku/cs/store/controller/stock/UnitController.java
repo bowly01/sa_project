@@ -20,6 +20,10 @@ public class UnitController {
 
     @PostMapping("/add")
     public String createUnit(@ModelAttribute Unit unit,Model model){
+        if(unitService.unitNameIsExisted(unit)){
+            model.addAttribute("nameError","มีหน่วยสินค้าชื่อนี้แล้ว");
+            return "products/unit-custom";
+        }
         unitService.createUnit(unit);
         model.addAttribute("units",unitService.getAllUnit());
         return "redirect:/products";
