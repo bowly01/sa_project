@@ -81,10 +81,7 @@ public class ProductService {
 
     public void updateProduct(ProductRequest updatedProduct, MultipartFile imageFile,UUID id) {
         Product existingProduct = productRepository.findById(id).orElseThrow();
-//        Product existingProduct = productRepository.findByName(updatedProduct.getName()).orElseThrow();
         existingProduct.setId(id);
-//        Unit unit = unitRepository.findById(updatedProduct.getUnitId()).get();
-//        existingProduct.setUnit(unit);
         Category category = categoryRepository.findById(updatedProduct.getCategoryId()).get();
         existingProduct.setName(updatedProduct.getName());
         existingProduct.setPrice(updatedProduct.getPrice());

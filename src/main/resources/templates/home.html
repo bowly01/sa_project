@@ -41,7 +41,7 @@
                 <td th:class="${product.stock < product.requireProduct*0.2} ? 'text-bg-danger' : ''" th:text="${product.stock}"></td>
                 <td style="text-align: right" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 2, 'POINT')}"></td>
                 <td>
-                    <a class="btn btn-info" th:href="@{/products/add/{id}(id=${product.id})}">Add Stock</a>
+                    <a class="btn btn-info" th:href="@{/inventory/add/{id}(id=${product.id})}">Add Stock</a>
                 </td>
             </tr>
         </th:block>
