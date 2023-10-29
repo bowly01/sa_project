@@ -18,6 +18,8 @@ public class ProductRequest {
     private double price;
     @Column(name = "unit")
     private Long unitId;
+    @Column(name = "stock")
+    private int stock;
     @Column(name = "requireProduct")
     private int requireProduct;
     @Column(name = "imageFile")

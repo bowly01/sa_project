@@ -16,6 +16,10 @@
   <div class="mb-3">
     <label for="inputName">Name</label>
     <input id="inputName" type="text" class="form-control" name="name" th:value="${products.name}">
+    <div id="error-msg" class="alert alert-danger"
+         th:if="${nameError}">
+      <span th:text="${nameError}"></span>
+    </div>
   </div>
   <div class="mb-3">
     <label for="inputCategory">Category</label>
@@ -35,14 +39,14 @@
     <input id="inputRequire" type="number" class="form-control" name="requireProduct" th:value="${products.requireProduct}" required>
 
   </div>
-  <div class="mb-3">
-    <label for="inputUnit">Unit</label>
-    <select class="form-control" id="inputUnit" name="UnitId">
-      <option th:each="unit : ${units}"
-              th:value="${unit.id}" th:text="${unit.name}">
-      </option>
-    </select>
-  </div>
+<!--  <div class="mb-3">-->
+<!--    <label for="inputUnit">Unit</label>-->
+<!--    <select class="form-control" id="inputUnit" name="UnitId">-->
+<!--      <option th:each="unit : ${units}"-->
+<!--              th:value="${unit.id}" th:text="${unit.name}">-->
+<!--      </option>-->
+<!--    </select>-->
+<!--  </div>-->
 
   <div class="mb-3">
     <label for="imageFile">Image</label>

@@ -46,10 +46,21 @@ public class ProductController {
     @GetMapping("/add/{id}")
     public String getProductToAdd(@PathVariable UUID id,Model model) {
         model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("units", unitService.getAllUnit());
         model.addAttribute("products", productService.getAllProducts());
         model.addAttribute("productsIndex", productService.getOneById(id));
 
         return "stock/add";
+    }
+    @PostMapping("/add/{id}")
+    public String addProductToStock(@PathVariable UUID id,Model model,@ModelAttribute ProductRequest product) {
+        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("products", productService.getAllProducts());
+        model.addAttribute("productsIndex", productService.getOneById(id));
+        model.addAttribute("units", unitService.getAllUnit());
+        productService.addStock(id,product.getStock(),product.getUnitId());
+        System.out.println("at add post");
+        return "redirect:/";
     }
     @GetMapping("/edit/{id}")
     public String getProductToEdit(@PathVariable UUID id,Model model) {
@@ -63,9 +74,13 @@ public class ProductController {
     @PostMapping ("/edit/{id}")
     public String updateProduct(@PathVariable UUID id,@ModelAttribute ProductRequest productRequest, @RequestParam("imageFile") MultipartFile imageFile, Model model) {
         // Implement the update logic here, including updating the database and handling image uploads.
-        model.addAttribute("categories", categoryService.getAllCategories());
-        model.addAttribute("units", unitService.getAllUnit());
-
+        if (productService.productNameIsExisted(productRequest)) {
+            model.addAttribute("products", productService.getOneById(id));
+            model.addAttribute("categories", categoryService.getAllCategories());
+            model.addAttribute("nameError","มีสินค้าชื้อนี้แล้ว");
+            model.addAttribute("units", unitService.getAllUnit());
+            return "products/edit";
+        }
         productService.updateProduct(productRequest, imageFile, id);
         return "redirect:/products";
     }

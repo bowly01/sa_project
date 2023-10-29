@@ -47,9 +47,10 @@ public class ProductService {
     public void createProduct(ProductRequest product, MultipartFile file) {
         Product record = modelMapper.map(product, Product.class);
         record.setCreatedDateTime(new Date());
+        record.setLastModifiedDateTime(new Date());
         Category category = categoryRepository.findById(product.getCategoryId()).get();
         Unit unit = unitRepository.findById(product.getUnitId()).get();
-        record.setCreatedDateTime(new Date());
+        record.setStock(0);
         record.setUnit(unit);
         record.setCategory(category);
         try {
@@ -63,36 +64,27 @@ public class ProductService {
     }
 
 
-    public Product addStock(UUID productId, int amountToAdd) {
+    public void addStock(UUID productId, int amountToAdd, Long unitId) {
         // Retrieve the product from the database
         Product product = productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product not found"));
-        int quantityPerUnit = product.getUnit().getQuantity();
+        Unit unit = unitRepository.findById(unitId).get();
+        int quantityPerUnit = unit.getQuantity();
         // Update the stock
         int newStock = product.getStock() + amountToAdd*quantityPerUnit;
         product.setStock(newStock);
         product.setDateStock(new Date());
+        product.setUnit(unit);
 
         // Save the updated product back to the database
-        return productRepository.save(product);
+        productRepository.save(product);
     }
 
-//    public Product updateProduct(UUID id, Product newProduct) {
-//        Product existingProduct = productRepository.findById(id).orElse(null);
-//
-//        if (existingProduct != null) {
-//            existingProduct.setName(newProduct.getName());
-//            existingProduct.setPrice(newProduct.getPrice());
-//            existingProduct.setStock(newProduct.getStock());
-//            return productRepository.save(existingProduct);
-//        }
-//        return null;
-//    }
     public void updateProduct(ProductRequest updatedProduct, MultipartFile imageFile,UUID id) {
-
-        Product existingProduct = productRepository.findByName(updatedProduct.getName()).orElseThrow();
+        Product existingProduct = productRepository.findById(id).orElseThrow();
+//        Product existingProduct = productRepository.findByName(updatedProduct.getName()).orElseThrow();
         existingProduct.setId(id);
-        Unit unit = unitRepository.findById(updatedProduct.getUnitId()).get();
-        existingProduct.setUnit(unit);
+//        Unit unit = unitRepository.findById(updatedProduct.getUnitId()).get();
+//        existingProduct.setUnit(unit);
         Category category = categoryRepository.findById(updatedProduct.getCategoryId()).get();
         existingProduct.setName(updatedProduct.getName());
         existingProduct.setPrice(updatedProduct.getPrice());

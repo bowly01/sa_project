@@ -40,6 +40,23 @@
         <div class="col-md-6 content">
             <!-- เนื้อหาส่วนครึ่งขวา -->
             <span th:text="${productsIndex.name}"></span>
+            <form th:object="${productsIndex}" action="#" th:action="@{/products/add/{id}(id=${id},final='productsIndex.id')}" method="POST">
+                    <div class="mb-3">
+                      <label for="inputQuantity">Quantity</label>
+                      <input id="inputQuantity" type="number" class="form-control" name="stock" required>
+
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputUnit">Unit</label>
+                        <select class="form-control" id="inputUnit" name="unitId">
+                            <option th:each="unit : ${units}"
+                                    th:value="${unit.id}" th:text="${unit.name}">
+                            </option>
+                        </select>
+                    </div>
+                <input type="submit" value="Add stock">
+
+            </form>
         </div>
     </div>
 </div>
