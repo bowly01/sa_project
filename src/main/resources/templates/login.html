@@ -8,32 +8,38 @@
   <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
   <script th:src="@{/js/bootstrap.min.js}"></script>
 </head>
-<body style="background-color: rgba(255, 175, 63, 0.85);">
+<body style="background-color: rgba(255, 175, 63, 0.85)">
 <div th:insert="~{fragments/header :: header}"></div>
 
-<div class="container w-50 p-3">
-  <h1 class="display-5">Login</h1>
+<div class="container w-100 p-5 width:" >
+  <img style="width: 231px ; height:231px; border-radius: 999px ;display: block;margin: 0px auto" src="https://s3-alpha-sig.figma.com/img/e279/00b5/605c9b9ed15ec25474e686b0794ec954?Expires=1699228800&Signature=Lbp-flVndkEjfhDDgtstBXU7XyvAGvtaBS4i3zue7aAoUFScPnohWD85G-AzA3Z-lrJkgyz3COm1gOMJBnczHy~Pqrc2lwDGhLHbjXRd78d5ZtsJAqc9d~ixCgjGzJg2xzEuTUcWOCCed-~9uDiqXMRTB7527rjIShLBT3Rnx6hu6BJERglJe9H2HFqkv8qCDYXZO8x7f6SaiISFVbS7OyypDPz6uwEtqBK2SxkOIr9bxuhEGJFuVs61yV82sZqzfR08IusQZKFU069kJ6wT2mxw4rnhm9fWZtEsqkmviXa9m0AaLSGOpYOn2bH3r5zGVPpIamVc5aeB-5ZR58ehyQ__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" />
+  <h1 class="display-5" style="font-family: Inknut Antiqua;word-wrap: break-word ;text-align: center" >Indian Spices</h1>
+  <h2 class="display-10" style="color: white;font-family: Inknut Antiqua;word-wrap: break-word;text-align: center";>ร้านขายเครื่องเทศอินเดีย</h2>
   <div class="block-white-div">
-  <form th:action="@{/login}" method="POST">
-    <div id="error-msg" th:if="${param.error}" class="alert alert-danger">
-      Invalid username or password
-    </div>
-    <div id="logout-msg" th:if="${param.logout}" class="alert alert-success">
-      You have been logged out
-    </div>
-    <div class="mb-3">
-      <label for="inputUsername">Username</label>
-      <input type="text" name="username" id="inputUsername"
-             class="form-control" required>
-    </div>
-    <div class="mb-3">
-      <label for="inputPassword">Password</label>
-      <input type="password" name="password" id="inputPassword"
-             class="form-control" required>
-    </div>
-    <button id="submit-button" type="submit" class="btn btn-primary">Login</button>
-  </form>
-</div>
+    <form th:action="@{/login}" method="POST">
+      <div id="error-msg" th:if="${param.error}" class="alert alert-danger">
+        Invalid username or password
+      </div>
+      <div id="logout-msg" th:if="${param.logout}" class="alert alert-success">
+        You have been logged out
+      </div>
+
+      <div class="card card-compact w-70 bg-base-100 shadow-xl" style="border-radius: 40px;position: relative;max-width: 500px;display: block;margin: 0px auto"><div class="card-body">
+        <div class="mb-2">
+          <label for="inputUsername" style="font-family: Inknut Antiqua">Username</label>
+          <input type="text" placeholder="ชื่อผู้ใช้งาน" name="username" id="inputUsername"
+                 class="form-control" required>
+        </div>
+        <div class="mb-2">
+          <label for="inputPassword" style="font-family: Inknut Antiqua">Password</label>
+          <input type="password" placeholder="รหัสผ่าน" name="password" id="inputPassword"
+                 class="form-control" required>
+        </div>
+        <button id="submit-button" type="submit" class="btn btn-warning" style="background: #FE4800;color: white;display: block;margin: auto" >เข้าสู่ระบบ</button>
+      </div>
+      </div>
+    </form>
+  </div>
 </div>
 
 </body>
