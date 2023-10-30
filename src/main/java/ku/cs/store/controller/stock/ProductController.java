@@ -8,11 +8,13 @@ import ku.cs.store.service.UnitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
 import java.util.UUID;
 
 @Controller
@@ -64,7 +66,11 @@ public class ProductController {
     }
 
     @PostMapping("/create")
-    public String createProduct(@ModelAttribute ProductRequest productRequest, @RequestParam("imageFile") MultipartFile file, Model model) {
+    public String createProduct(@ModelAttribute ProductRequest productRequest,
+                                @RequestParam("imageFile") MultipartFile file,
+                                Model model,
+                                Authentication authentication) {
+        String username = authentication.getName();
         model.addAttribute("product", productRequest);
         if (productService.productNameIsExisted(productRequest)) {
             model.addAttribute("categories", categoryService.getAllCategories());
@@ -73,14 +79,16 @@ public class ProductController {
             return "products/create"; // Return to the form with a specific error message
         }
 
-        productService.createProduct(productRequest, file);
+        productService.createProduct(productRequest, file,username);
         model.addAttribute("units", unitService.getAllUnit());
         model.addAttribute("categories", categoryService.getAllCategories());
         return "redirect:/inventory";
     }
     @PostMapping("/delete/{id}")
-    public String deleteProduct(@PathVariable UUID id, @ModelAttribute ProductRequest productRequest, Model model){
-        productService.deleteProductById(id);
+    public String deleteProduct(@PathVariable UUID id, @ModelAttribute ProductRequest productRequest,
+                                Model model,Authentication authentication){
+        String username = authentication.getName();
+        productService.deleteProductById(id,username);
         model.addAttribute("units", unitService.getAllUnit());
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("product", productRequest);
