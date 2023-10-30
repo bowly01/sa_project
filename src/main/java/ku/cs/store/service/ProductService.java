@@ -112,7 +112,7 @@ public class ProductService {
         productLogRepository.save(history);
     }
 
-    public void updateProduct(ProductRequest updatedProduct, MultipartFile imageFile,UUID id) {
+    public void updateProduct(ProductRequest updatedProduct, MultipartFile imageFile,UUID id,String username) {
         Product existingProduct = productRepository.findById(id).orElseThrow();
         existingProduct.setId(id);
         Category category = categoryRepository.findById(updatedProduct.getCategoryId()).get();
@@ -131,8 +131,17 @@ public class ProductService {
 
     }
         existingProduct.setCategory(category);
-
+        // Save the updated product back to the database
         productRepository.save(existingProduct);
+        // Save History
+        ProductLog history = new ProductLog();
+        history.setProductId(existingProduct.getId());
+        history.setProductName(existingProduct.getName());
+        history.setOperationType("EDIT");
+        history.setUser(username);
+        history.setTimestamp(new Date());
+        productLogRepository.save(history);
+
 }
     public boolean productNameIsExisted(ProductRequest productRequest) {
         Optional<Product> existingProduct = productRepository.findByName(productRequest.getName());

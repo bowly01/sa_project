@@ -44,7 +44,10 @@ public class ProductController {
         return "products/edit";
     }
     @PostMapping ("/edit/{id}")
-    public String updateProduct(@PathVariable UUID id,@ModelAttribute ProductRequest productRequest, @RequestParam("imageFile") MultipartFile imageFile, Model model) {
+    public String updateProduct(@PathVariable UUID id,@ModelAttribute ProductRequest productRequest,
+                                @RequestParam("imageFile") MultipartFile imageFile,
+                                Model model,Authentication authentication) {
+        String username = authentication.getName();
         // Implement the update logic here, including updating the database and handling image uploads.
         if (productService.productNameIsExisted(productRequest)&&(!productRequest.getName().equals(productService.getOneById(id).getName()))) {
             model.addAttribute("products", productService.getOneById(id));
@@ -53,7 +56,7 @@ public class ProductController {
             model.addAttribute("units", unitService.getAllUnit());
             return "products/edit";
         }
-        productService.updateProduct(productRequest, imageFile, id);
+        productService.updateProduct(productRequest, imageFile, id,username);
         return "redirect:/inventory";
     }
     @GetMapping("/create")
