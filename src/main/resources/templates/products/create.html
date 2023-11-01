@@ -22,6 +22,15 @@
 
     </div>
     <div class="mb-3">
+      <label for="inputDetail">Detail</label>
+      <input id="inputDetail" type="text" class="form-control" th:field="*{detail}">
+<!--      <div id="error-msg" class="alert alert-danger"-->
+<!--           th:if="${nameError}">-->
+<!--        <span th:text="${nameError}"></span>-->
+<!--      </div>-->
+
+    </div>
+    <div class="mb-3">
       <label for="inputCategory">Category</label>
       <select class="form-control" id="inputCategory" name="categoryId">
         <option th:each="category : ${categories}"
@@ -37,6 +46,11 @@
     <div class="mb-3">
       <label for="inputRequire">Require Max</label>
       <input id="inputRequire" type="number" class="form-control" name="requireProduct" required>
+
+    </div>
+    <div class="mb-3">
+      <label for="inputStock">Stock</label>
+      <input id="inputStock" type="number" class="form-control" name="stock" required>
 
     </div>
     <div class="mb-3">
@@ -62,7 +76,7 @@
       let name = document.getElementById("inputName").value;
       let price = parseFloat(document.getElementById("inputPrice").value);
       let requireProduct = parseInt(document.getElementById("inputRequire").value);
-      let quantity = parseInt(document.getElementById("inputQuantity").value);
+      let quantity = parseInt(document.getElementById("inputStock").value);
 
 
       if (name.trim() === "") {

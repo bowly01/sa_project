@@ -14,6 +14,8 @@ public class ProductRequest {
     private String name;
     @Column(name = "categoryId")
     private UUID categoryId;
+    @Column(name = "detail")
+    private String detail;
     @Column(name = "price")
     private double price;
     @Column(name = "unit")

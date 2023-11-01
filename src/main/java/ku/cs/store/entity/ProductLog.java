@@ -16,7 +16,7 @@ public class ProductLog {
     private UUID productId;
     private String productName;
     private String operationType; // Add, Create, Delete
-
+    private String Detail;
     private String user;
 
     @Temporal(TemporalType.TIMESTAMP)

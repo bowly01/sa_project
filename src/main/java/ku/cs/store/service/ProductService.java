@@ -41,10 +41,13 @@ public class ProductService {
         Product record = modelMapper.map(product, Product.class);
         record.setCreatedDateTime(new Date());
         record.setLastModifiedDateTime(new Date());
+        record.setDateStock(new Date());
         Category category = categoryRepository.findById(product.getCategoryId()).get();
         Unit unit = unitRepository.findById(product.getUnitId()).get();
-        record.setStock(0);
+        record.setStock(product.getStock());
+        record.setRequireProduct(product.getRequireProduct());
         record.setUnit(unit);
+        record.setDetail(product.getDetail());
         record.setCategory(category);
         try {
             byte[] imageBytes = file.getBytes();
@@ -61,6 +64,7 @@ public class ProductService {
         history.setProductId(record.getId());
         history.setProductName(record.getName());
         history.setOperationType("CREATE");
+        history.setDetail("สร้างสินค้าใหม่");
         history.setUser(username);
         history.setTimestamp(new Date());
         productLogRepository.save(history);
@@ -80,6 +84,7 @@ public class ProductService {
             history.setProductId(product.getId());
             history.setProductName(product.getName());
             history.setOperationType("DELETE");
+            history.setDetail("ลบสินค้าชิ้นนี้");
             history.setUser(username);
             history.setTimestamp(new Date());
             productLogRepository.save(history);
@@ -95,7 +100,8 @@ public class ProductService {
         Unit unit = unitRepository.findById(unitId).get();
         int quantityPerUnit = unit.getQuantity();
         // Update the stock
-        int newStock = product.getStock() + amountToAdd*quantityPerUnit;
+        int total=amountToAdd*quantityPerUnit;
+        int newStock = product.getStock() + total;
         product.setStock(newStock);
         product.setDateStock(new Date());
         product.setUnit(unit);
@@ -107,6 +113,7 @@ public class ProductService {
         history.setProductId(product.getId());
         history.setProductName(product.getName());
         history.setOperationType("ADD");
+        history.setDetail("เพิ่มสินค้าจำนวน"+total+"ชิ้น");
         history.setUser(username);
         history.setTimestamp(new Date());
         productLogRepository.save(history);
@@ -115,16 +122,35 @@ public class ProductService {
     public void updateProduct(ProductRequest updatedProduct, MultipartFile imageFile,UUID id,String username) {
         Product existingProduct = productRepository.findById(id).orElseThrow();
         existingProduct.setId(id);
+        String test = "";
+        if(!updatedProduct.getName().equals(existingProduct.getName())){
+            existingProduct.setName(updatedProduct.getName());
+            test+= "แก้ชื่อเป็น: "+updatedProduct.getName()+" ,";
+        }
+        if(!updatedProduct.getDetail().equals(existingProduct.getDetail())){
+            existingProduct.setDetail(updatedProduct.getDetail());
+            test+= "แก้รายละเอียดเป็น: "+updatedProduct.getDetail()+" ,";
+        }
+        if(updatedProduct.getStock()!=(existingProduct.getStock())){
+            test+= "แก้จำนวนสินค้าในคลังเป็น: "+updatedProduct.getStock()+" ,";
+        }
+        if(updatedProduct.getPrice()!=(existingProduct.getPrice())){
+            existingProduct.setPrice(updatedProduct.getPrice());
+            test+= "แก้ราคาเป็น: "+updatedProduct.getPrice()+" ,";
+        }
+        if(updatedProduct.getRequireProduct()!=(existingProduct.getRequireProduct())){
+            test+= "แก้จำนวนสินค้าที่ต้องการเป็น: "+updatedProduct.getRequireProduct()+" ,";
+        }
         Category category = categoryRepository.findById(updatedProduct.getCategoryId()).get();
-        existingProduct.setName(updatedProduct.getName());
-        existingProduct.setPrice(updatedProduct.getPrice());
         existingProduct.setLastModifiedDateTime(new Date());
+        existingProduct.setStock(updatedProduct.getStock());
         existingProduct.setRequireProduct(updatedProduct.getRequireProduct());
         if(!imageFile.isEmpty()) {
             try {
                 byte[] imageBytes = imageFile.getBytes();
                 String base64Image = Base64.getEncoder().encodeToString(imageBytes);
                 existingProduct.setImageFile(base64Image);
+                test+="แก้ไขรูปภาพ";
             } catch (IOException e) {
                 e.printStackTrace();
         }
@@ -138,8 +164,10 @@ public class ProductService {
         history.setProductId(existingProduct.getId());
         history.setProductName(existingProduct.getName());
         history.setOperationType("EDIT");
+        history.setDetail(test);
         history.setUser(username);
         history.setTimestamp(new Date());
+
         productLogRepository.save(history);
 
 }

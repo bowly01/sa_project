@@ -17,6 +17,13 @@ public class ProductLogService {
 
     @Autowired
     private ModelMapper modelMapper;
+    public List<ProductLog> getHistoriesByOperationType(String operationType) {
+        if ("ALL".equals(operationType)) {
+            return productLogRepository.findAll();
+        } else {
+            return productLogRepository.findByOperationType(operationType);
+        }
+    }
 
 
     public List<ProductLog> getAllHistory() {

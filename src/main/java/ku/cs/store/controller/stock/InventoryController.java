@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -39,8 +40,11 @@ public class InventoryController {
         return "stock/inventory";
     }
     @GetMapping("/history")
-    public String getHistory(Model model){
-        model.addAttribute("histories",productLogService.getAllHistory());
+    public String getHistory(@RequestParam(value = "operationType", required = false) String operationType,
+                             Model model){
+        List<ProductLog> productLogs = productLogService.getHistoriesByOperationType(operationType);
+        model.addAttribute("operationType", operationType);
+        model.addAttribute("histories",productLogs);
         return "products/history";
     }
     @GetMapping("/add/{id}")

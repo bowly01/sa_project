@@ -1,7 +1,7 @@
 package ku.cs.store.controller.stock;
 
 
-import ku.cs.store.model.CategoryRequest;
+import ku.cs.store.entity.Category;
 import ku.cs.store.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,7 +24,7 @@ public class CategoryController {
 
 
     @PostMapping("/add")
-    public String createCategory(@ModelAttribute CategoryRequest category,
+    public String createCategory(@ModelAttribute Category category,
                                  Model model) {
         if(categoryService.categoryNameIsExisted(category)){
             model.addAttribute("nameError","มีประเภทสินค้าชื่อนี้แล้ว");
@@ -36,7 +36,7 @@ public class CategoryController {
     }
     // not yet
     @PostMapping("/delete")
-    public String deleteCategory(@ModelAttribute CategoryRequest category,
+    public String deleteCategory(@ModelAttribute Category category,
                                  Model model){
         categoryService.createCategory(category);
         model.addAttribute("categories", categoryService.getAllCategories());

@@ -2,7 +2,6 @@ package ku.cs.store.service;
 
 import ku.cs.store.entity.Category;
 import ku.cs.store.entity.Unit;
-import ku.cs.store.model.CategoryRequest;
 import ku.cs.store.model.ProductRequest;
 import ku.cs.store.repository.UnitRepository;
 import org.modelmapper.ModelMapper;

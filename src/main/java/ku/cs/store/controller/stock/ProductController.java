@@ -57,6 +57,9 @@ public class ProductController {
             return "products/edit";
         }
         productService.updateProduct(productRequest, imageFile, id,username);
+        System.out.println("at edit post");
+        System.out.println(productRequest.getRequireProduct());
+        System.out.println(productRequest.getStock());
         return "redirect:/inventory";
     }
     @GetMapping("/create")

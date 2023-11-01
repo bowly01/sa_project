@@ -13,12 +13,26 @@
 
 <div class="container">
   <h1>History Product</h1>
-  <table class="table table-bordered table-striped table-hover">
+    <!-- Add the dropdown and table to your HTML -->
+    <div class="mb-3">
+        <label for="operationTypeFilter">Filter by Operation Type:</label>
+        <select id="operationTypeFilter" class="form-control">
+            <option value="ALL">Show All</option>
+            <option value="CREATE">Create</option>
+            <option value="ADD">Add</option>
+            <option value="EDIT">Edit</option>
+            <option value="DELETE">Delete</option>
+            <!-- Add other operation types as needed -->
+        </select>
+    </div>
+
+    <table id="historyTable" class="table table-bordered table-striped table-hover">
     <thead class="thead-dark">
     <tr>
-      <th>ลำดับ</th>
+<!--      <th>ลำดับ</th>-->
       <th>ชื่อสินค้า</th>
       <th>สถานะ</th>
+      <th>รายละเอียด</th>
       <th>เวลา</th>
       <th>ผู้ทำ</th>
     </tr>
@@ -26,12 +40,13 @@
     <tbody>
     <th:block th:if="${histories != null}">
 
-      <tr th:each="history : ${histories}">
-        <td th:text="${history.getId}"></td>
-        <td th:text="${history.getProductName()}"></td>
-        <td th:text="${history.getOperationType()}"></td>
-        <td th:text="${history.getTimestamp()}"></td>
-        <td th:text="${history.getUser()}"></td>
+      <tr th:each="history : ${histories}" th:if="${operationType == null or operationType == '' or history.operationType == operationType}">
+<!--&lt;!&ndash;        <td th:text="${history.getId}"></td>&ndash;&gt;-->
+<!--        <td th:text="${history.getProductName()}"></td>-->
+<!--        <td th:text="${history.getOperationType()}"></td>-->
+<!--        <td th:text="${history.getDetail()}"></td>-->
+<!--        <td th:text="${history.getTimestamp()}"></td>-->
+<!--        <td th:text="${history.getUser()}"></td>-->
       </tr>
     </th:block>
     </tbody>
@@ -39,4 +54,47 @@
 </div>
 
 </body>
+<script>
+    document.getElementById("operationTypeFilter").addEventListener("change", function() {
+        filterHistory();
+    });
+
+    function filterHistory() {
+        var selectedOperationType = document.getElementById("operationTypeFilter").value;
+        // Call a function to update the table based on the selected operation type
+        updateTable(selectedOperationType);
+    }
+
+    function updateTable(operationType) {
+        // You can make an Ajax request to the server to get filtered records
+        fetch('/getHistories?operationType=' + operationType)
+            .then(response => response.json())
+            .then(data => {
+                // Get a reference to the table body
+                var tableBody = document.getElementById("historyTable").getElementsByTagName('tbody')[0];
+
+                // Clear the current table rows
+                tableBody.innerHTML = '';
+
+                // Iterate over the filtered history records and create table rows
+                data.forEach(function(history) {
+                    var row = tableBody.insertRow(tableBody.rows.length);
+                    var cell1 = row.insertCell(0);
+                    var cell2 = row.insertCell(1);
+                    var cell3 = row.insertCell(2);
+                    var cell4 = row.insertCell(3);
+                    var cell5 = row.insertCell(4);
+
+                    cell1.innerHTML = history.productName;
+                    cell2.innerHTML = history.operationType;
+                    cell3.innerHTML = history.detail;
+                    cell4.innerHTML = history.timestamp;
+                    cell5.innerHTML = history.user;
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
 </html>
