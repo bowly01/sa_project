@@ -13,8 +13,6 @@
 
   <!-- นำเข้าไลบรารี Bootstrap JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="/static/css/crude.css">
-
   <style>
     body{
       height: 100vh;
@@ -51,11 +49,11 @@
             <td th:text="${category.name}"></td>
             <td>
               <!-- Edit Button-->
-              <a class="btn btn-primary" th:href="@{'/categories/update/' + ${category.id}}" data-category-id="${category.id}" id="updateLink">แก้ไข</a>
+              <a class="btn btn-primary" th:href="@{'/categories/update/' + ${category.id}}">แก้ไข</a>
             </td>
             <td>
               <!-- Delete Button-->
-              <a class="btn btn-danger" th:href="@{'/categories/delete/' + ${category.id}}" data-category-id="${category.id}" id="deleteLink">ลบ</a>
+              <a class="btn btn-danger" th:href="@{'/categories/delete/' + ${category.id}}">ลบ</a>
             </td>
           </tr>
           </tbody>
@@ -112,8 +110,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
         integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/"
         crossorigin="anonymous"></script>
-<script>
+<script src="/static/js/delete-modal.js"></script>
 
-</script>
 </body>
 </html>

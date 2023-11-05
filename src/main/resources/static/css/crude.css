@@ -1,0 +1,25 @@
+/* Add this CSS to your HTML or in an external CSS file */
+.delete-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    text-align: center;
+}
+
+.delete-modal h1 {
+    background: #fff;
+    padding: 20px;
+    margin: 50px auto;
+    width: 50%;
+    border-radius: 5px;
+}
+
+.delete-modal button {
+    margin: 10px;
+    padding: 10px 20px;
+}

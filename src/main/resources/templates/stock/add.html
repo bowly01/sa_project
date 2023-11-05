@@ -6,17 +6,19 @@
     <title>Store Web Application</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<style>
+    body{
+        background-color: #FFAF3FD9;
+    }
+</style>
 </head>
 
 <body>
 <div th:insert="~{fragments/header :: header}"></div>
-
-<div class="container-fluid">
-    <div class="row">
-        <!-- ครึ่งซ้าย -->
-        <div class="col-md-6 sidebar">
-            <!-- เนื้อหาส่วนครึ่งซ้าย -->
-            <table class="table table-bordered table-striped table-hover">
+<!--<div class="container">-->
+    <div class="d-flex flex-row position-sticky top-0 bottom-0 w-100">
+        <div class="col-xl-6" style="padding-left: 3%;padding-right: 3%; padding-top: 5%; padding-bottom: 10%">
+            <table class="table table-bordered table-striped table-hover table-fixed">
                 <thead class="thead-dark">
                 <tr>
                     <th>ชื่อสินค้า</th>
@@ -26,40 +28,68 @@
                 </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="product : ${products}">
-                        <td th:text="${product.name}"></td>
-                        <td th:text="${product.stock}"></td>
-                        <td style="text-align: right" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 2, 'POINT')}"></td>
-                        <td><a class="btn btn-info" th:href="@{/inventory/add/{id}(id=${product.id})}">Add Stock</a></td>
-                    </tr>
+                <tr th:each="product : ${products}">
+                    <td th:text="${product.name}"></td>
+                    <td th:text="${product.stock}"></td>
+                    <td style="text-align: right" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 2, 'POINT')}"></td>
+                    <td><a class="btn btn-info" th:href="@{/inventory/add/{id}(id=${product.id})}">Add Stock</a></td>
+                </tr>
                 </tbody>
 
             </table>
         </div>
-        <!-- ครึ่งขวา -->
-        <div class="col-md-6 content">
-            <!-- เนื้อหาส่วนครึ่งขวา -->
-            <span th:text="${productsIndex.name}"></span>
-            <form th:object="${productsIndex}" action="#" th:action="@{/inventory/add/{id}(id=${id},final='productsIndex.id')}" method="POST">
-                    <div class="mb-3">
-                      <label for="inputQuantity">Quantity</label>
-                      <input id="inputQuantity" type="number" class="form-control" name="stock" required>
+        <div class="col-xl-6 " style="padding-left: 3%;padding-right: 3%; padding-top: 5%; padding-bottom: 10%">
+            <div class="card" style=" border-radius: 33px;height: 100%;width: 100%;padding-left: 10%;padding-top: 5%;padding-right: 5%">
 
+            <form th:object="${productsIndex}" action="#" th:action="@{/inventory/add/{id}(id=${id},final='productsIndex.id')}" method="POST">
+                <div class="mb-3">
+                    <div class="d-inline-flex">
+                        <p>ชื่อสินค้า:&nbsp;&nbsp;&nbsp;&nbsp;</p><p th:text="${productsIndex.name}"></p>
+                    </div><br>
+                    <div class="d-inline-flex">
+                    <p>รายละเอียดสินค้า:&nbsp;&nbsp;&nbsp;</p>
+                        <p th:text="${productsIndex.detail}"></p></div><br>
+                    <div class="d-inline-flex">
+                    <p>ราคา:&nbsp;&nbsp;</p> <p th:text="${#numbers.formatDecimal(productsIndex.price, 1, 'COMMA', 2, 'POINT')}"></p>
+                    <p>&nbsp;&nbsp;บาท</p>
+                    </div><br>
+
+                <div class="d-lg-inline-flex">
+                    <input id="inputQuantity" type="number" class="form-control" name="stock" placeholder="จำนวนสินค้า" required>
+                    <label>&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                    <select class="form-select" id="inputUnit" name="unitId" placeholder="หน่วย">
+                        <option th:each="unit : ${units}"
+                                th:value="${unit.id}" th:text="${unit.name}+'('+${unit.quantity}+')'">
+                        </option>
+
+                    </select>
+
+                </div>
+                    <div id="error-msg" class="alert alert-danger "
+                           th:if="${stockError}">
+                    <span th:text="${stockError}"></span>
+                </div>
+                    <br>
+
+                <div class="row">
+                    <div class="col-xl-4"></div>
+                    <div class="col-xl-6">
+                        <input type="submit" class="btn btn-primary" value="Add stock">
                     </div>
-                    <div class="mb-3">
-                        <label for="inputUnit">Unit</label>
-                        <select class="form-control" id="inputUnit" name="unitId">
-                            <option th:each="unit : ${units}"
-                                    th:value="${unit.id}" th:text="${unit.name}+${unit.quantity}">
-                            </option>
-                        </select>
-                    </div>
-                <input type="submit" value="Add stock">
+                </div>
+                </div>
+
 
             </form>
+            </div>
+    </div>
+
+            </div>
+
         </div>
     </div>
-</div>
+<!--</div>-->
+
 
 
 </body>

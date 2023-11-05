@@ -3,6 +3,7 @@ package ku.cs.store.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.UUID;
 
 
 @Entity

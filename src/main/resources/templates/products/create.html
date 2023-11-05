@@ -7,101 +7,84 @@
   <title>Store Web Application</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  <style>
+    body{
+      height: 100vh;
+      background: linear-gradient(
+              to right,
+              white 0%,
+              white 50%,
+              #FFAF3FD9 0%,
+              #FFAF3FD9 50%
+      );
+    }
+  </style>
 </head>
 <body>
+
 <div th:insert="~{fragments/header :: header}"></div>
-<div class="container">
-  <form th:object="${product}" action="#" th:action="@{/products/create}" method="POST" enctype="multipart/form-data" onsubmit="return validateForm();">
-    <div class="mb-3">
-      <label for="inputName">Name</label>
-      <input id="inputName" type="text" class="form-control" th:field="*{name}">
-      <div id="error-msg" class="alert alert-danger"
-           th:if="${nameError}">
-        <span th:text="${nameError}"></span>
-      </div>
+<div class="row">
+  <div class="col-xl-6">
+  </div>
+  <div class="col-xl-6" style="padding-left: 3%;padding-right: 3%; padding-top: 5%; padding-bottom: 10%">
+    <div class="card" style=" border-radius: 33px;height: 100%;width: 100%;padding-left: 10%;padding-top: 5%;padding-right: 5%">
+
+      <form th:object="${product}" action="#" th:action="@{/products/create}" method="POST" enctype="multipart/form-data">
+        <div class="mb-3">
+          <label for="inputName">ชื่อสินค้า</label>
+          <input id="inputName" type="text" class="form-control" th:field="*{name}" required>
+          <div id="error-msg" class="alert alert-danger" th:if="${nameError}"><span th:text="${nameError}"></span></div>
+          <div class="alert alert-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+        </div>
+        <div class="mb-3">
+          <label for="inputDetail">รายละเอียดสินค้า</label>
+          <input id="inputDetail" type="text" class="form-control" th:field="*{detail}" required>
+          <div class="alert alert-danger" th:if="${#fields.hasErrors('detail')}" th:errors="*{detail}"></div>
+        </div>
+        <div class="mb-3">
+          <label for="inputCategory">ประเภทสินค้า</label>
+          <select class="form-control" id="inputCategory" name="categoryId">
+            <option th:each="category : ${categories}"
+                    th:value="${category.id}" th:text="${category.name}">
+            </option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="inputPrice">ราคาสินค้า</label>
+          <input id="inputPrice" type="number" class="form-control" name="price" required>
+          <div id="priceError" class="alert alert-danger" th:if="${priceError != null}"><span th:text="${priceError}"></span></div>
+        </div>
+        <div class="mb-3">
+          <label for="inputRequire">จำนวนสินค้าที่ต้องการ</label>
+          <input id="inputRequire" type="number" class="form-control" name="requireProduct" required>
+          <div id="requireError" class="alert alert-danger" th:if="${requireError != null}"><span th:text="${requireError}"></span></div>
+        </div>
+        <div class="mb-3">
+          <label for="inputStock">จำนวนสินค้า</label>
+          <input id="inputStock" type="number" class="form-control" name="stock" required>
+          <div id="stockError" class="alert alert-danger" th:if="${stockError != null}"><span th:text="${stockError}"></span></div>
+        </div>
+
+        <div class="mb-3">
+          <label for="inputUnit">Unit</label>
+          <select class="form-control" id="inputUnit" name="unitId">
+            <option th:each="unit : ${units}"
+                    th:value="${unit.id}" th:text="${unit.name}">
+            </option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="imageFile">Image</label>
+          <input type="file" id="imageFile" name="imageFile" accept="image/*">
+        </div>
+        <button id="submit-button" type="submit" class="btn btn-primary"
+                onclick="return confirm('คุณแน่ใจหรือไม่ว่าต้องการส่งแบบฟอร์มนี้?');">
+          สร้างสินค้าใหม่</button>
+      </form>
 
     </div>
-    <div class="mb-3">
-      <label for="inputDetail">Detail</label>
-      <input id="inputDetail" type="text" class="form-control" th:field="*{detail}">
-<!--      <div id="error-msg" class="alert alert-danger"-->
-<!--           th:if="${nameError}">-->
-<!--        <span th:text="${nameError}"></span>-->
-<!--      </div>-->
-
-    </div>
-    <div class="mb-3">
-      <label for="inputCategory">Category</label>
-      <select class="form-control" id="inputCategory" name="categoryId">
-        <option th:each="category : ${categories}"
-                th:value="${category.id}" th:text="${category.name}">
-        </option>
-      </select>
-    </div>
-    <div class="mb-3">
-      <label for="inputPrice">Price</label>
-      <input id="inputPrice" type="number" class="form-control" name="price" required>
-
-    </div>
-    <div class="mb-3">
-      <label for="inputRequire">Require Max</label>
-      <input id="inputRequire" type="number" class="form-control" name="requireProduct" required>
-
-    </div>
-    <div class="mb-3">
-      <label for="inputStock">Stock</label>
-      <input id="inputStock" type="number" class="form-control" name="stock" required>
-
-    </div>
-    <div class="mb-3">
-      <label for="inputUnit">Unit</label>
-      <select class="form-control" id="inputUnit" name="unitId">
-        <option th:each="unit : ${units}"
-                th:value="${unit.id}" th:text="${unit.name}">
-        </option>
-      </select>
-    </div>
-
-    <div class="mb-3">
-      <label for="imageFile">Image</label>
-      <input type="file" id="imageFile" name="imageFile" accept="image/*">
-    </div>
-    <button id="submit-button" type="submit" class="btn btn-primary"
-            onclick="return confirm('Are you sure you want to submit this form?');">
-      สร้างสินค้าใหม่</button>
-  </form>
-
-  <script>
-    function validateForm() {
-      let name = document.getElementById("inputName").value;
-      let price = parseFloat(document.getElementById("inputPrice").value);
-      let requireProduct = parseInt(document.getElementById("inputRequire").value);
-      let quantity = parseInt(document.getElementById("inputStock").value);
-
-
-      if (name.trim() === "") {
-        alert("Name is required.");
-        return false;
-      }
-
-      if (isNaN(price) || price <= 0) {
-        alert("Price must be a positive number.");
-        return false;
-      }
-
-      if (isNaN(requireProduct) || requireProduct <= 0) {
-        alert("Require must be a positive number.");
-        return false;
-      }
-
-      if (isNaN(quantity) || quantity <= 0) {
-        alert("Quantity must be a positive number.");
-        return false;
-      }
-
-      return true;
-    }
-  </script>
+</div>
 
 </div>
 

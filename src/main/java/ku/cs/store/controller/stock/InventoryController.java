@@ -2,6 +2,7 @@ package ku.cs.store.controller.stock;
 
 import ku.cs.store.entity.Product;
 import ku.cs.store.entity.ProductLog;
+import ku.cs.store.entity.Unit;
 import ku.cs.store.model.ProductRequest;
 import ku.cs.store.service.CategoryService;
 import ku.cs.store.service.ProductLogService;
@@ -61,12 +62,19 @@ public class InventoryController {
                                     @ModelAttribute ProductRequest product,
                                     Authentication authentication) {
         String username = authentication.getName();
-
+        if(product.getStock() < 1){
+            model.addAttribute("categories", categoryService.getAllCategories());
+            model.addAttribute("products", productService.getAllProducts());
+            model.addAttribute("productsIndex", productService.getOneById(id));
+            model.addAttribute("units", unitService.getAllUnit());
+            model.addAttribute("stockError", product.getStock() < 1 ? "กรุณากรอกจำนวนสินค้ามากกว่าเท่ากับ 1" : null);
+            return "stock/add";
+        }
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("products", productService.getAllProducts());
         model.addAttribute("productsIndex", productService.getOneById(id));
         model.addAttribute("units", unitService.getAllUnit());
         productService.addStock(id,product.getStock(),product.getUnitId(),username);
-        return "redirect:/";
+        return "redirect:/inventory";
     }
 }

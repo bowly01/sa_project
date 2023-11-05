@@ -23,17 +23,16 @@
     <table th:each="category : ${categories}" class="table table-bordered table-striped table-hover">
         <thead class="thead-dark">
         <tr class="table-dark">
-            <td colspan="4"><span th:text="${category.name}"></span></td>
+            <td colspan="5"><span th:text="${category.name}"></span></td>
         </tr>
         </thead>
-<!--        <thead class="thead-dark">-->
         <tr>
-            <th>Product Name</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Add Stock</th>
+            <th>ชื่อสินค้า</th>
+            <th>จำนวนคงคลังต่อหน่วย</th>
+            <th>ราคาสินค้าต่อหน่วย</th>
+            <th>เพิ่มเข้าสต็อค</th>
+            <th>เพิ่มรายการสั่งซื้อ</th>
         </tr>
-<!--        </thead>-->
         <tbody>
         <th:block th:if="${products != null}">
             <tr th:each="product : ${category.products}">
@@ -42,6 +41,16 @@
                 <td style="text-align: right" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 2, 'POINT')}"></td>
                 <td>
                     <a class="btn btn-info" th:href="@{/inventory/add/{id}(id=${product.id})}">Add Stock</a>
+                </td>
+                <td>
+                    <form action="#" th:action="@{/orders/{productId}(productId=${product.id})}" method="POST">
+                        <div class="mb-1" style="display: inline-block">
+                            <label for="inputQuantity">Quantity</label>
+                            <input id="inputQuantity" type="input" class="form-control"
+                                   name="quantity">
+                        </div>
+                        <button id="submit-button" type="submit" class="btn btn-primary" onclick="showPopup('ไม่สามารถเพิ่มสินค้าลงตะกร้าได้')">Add to Cart</button>
+                    </form>
                 </td>
             </tr>
         </th:block>

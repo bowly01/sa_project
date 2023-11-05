@@ -1,13 +1,13 @@
 package ku.cs.store.controller.stock;
 
+import jakarta.validation.Valid;
 import ku.cs.store.entity.Member;
 import ku.cs.store.model.ProductRequest;
 import ku.cs.store.service.CategoryService;
 import ku.cs.store.service.ProductService;
 import ku.cs.store.service.UnitService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -57,9 +57,6 @@ public class ProductController {
             return "products/edit";
         }
         productService.updateProduct(productRequest, imageFile, id,username);
-        System.out.println("at edit post");
-        System.out.println(productRequest.getRequireProduct());
-        System.out.println(productRequest.getStock());
         return "redirect:/inventory";
     }
     @GetMapping("/create")
@@ -78,12 +75,16 @@ public class ProductController {
                                 Authentication authentication) {
         String username = authentication.getName();
         model.addAttribute("product", productRequest);
-        if (productService.productNameIsExisted(productRequest)) {
+        if (productService.productNameIsExisted(productRequest)||productRequest.getPrice() < 1 || productRequest.getRequireProduct() < 1 || productRequest.getStock() < 1) {
+            model.addAttribute("nameError",productService.productNameIsExisted(productRequest)?"มีสินค้าชื่อนี้แล้ว":null);
+            model.addAttribute("priceError", productRequest.getPrice() < 1 ? "กรุณากรอกราคาสินค้ามากกว่าเท่ากับ 1" : null);
+            model.addAttribute("requireError", productRequest.getRequireProduct() < 1 ? "กรุณากรอกจำนวนสินค้าที่ต้องการมากกว่าเท่ากับ 1" : null);
+            model.addAttribute("stockError", productRequest.getStock() < 1 ? "กรุณากรอกจำนวนสินค้ามากกว่าเท่ากับ 1" : null);
             model.addAttribute("categories", categoryService.getAllCategories());
             model.addAttribute("units", unitService.getAllUnit());
-            model.addAttribute("nameError","มีสินค้าชื่อนี้แล้ว");
-            return "products/create"; // Return to the form with a specific error message
+            return "products/create"; // Return to the form page with error messages
         }
+
 
         productService.createProduct(productRequest, file,username);
         model.addAttribute("units", unitService.getAllUnit());
