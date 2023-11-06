@@ -1,18 +1,20 @@
 package ku.cs.store.controller.stock;
 
+import jakarta.validation.Valid;
+import ku.cs.store.entity.Member;
 import ku.cs.store.model.ProductRequest;
-import ku.cs.store.entity.Product;
 import ku.cs.store.service.CategoryService;
 import ku.cs.store.service.ProductService;
 import ku.cs.store.service.UnitService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.BindingResult;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
 import java.util.UUID;
 
 @Controller
@@ -24,15 +26,6 @@ public class ProductController {
     private CategoryService categoryService;
     @Autowired
     private UnitService unitService;
-    @GetMapping
-    public String getAllProduct(Model model,  @RequestParam(name = "page", defaultValue = "0") int page) {
-        int pageSize = 5; // Number of products per page
-        Page<Product> productPage = productService.findAll(PageRequest.of(page, pageSize));
-        model.addAttribute("categories", categoryService.getAllCategories());
-        model.addAttribute("products", productPage.getContent());
-        model.addAttribute("page", productPage);
-        return "products/inventory";
-    }
     //view index
     @GetMapping("/{id}")
     public String getOneProduct(@PathVariable UUID id, Model model) {
@@ -40,17 +33,7 @@ public class ProductController {
         return "products/index";
     }
 
-    //Add stock
 
-
-    @GetMapping("/add/{id}")
-    public String getProductToAdd(@PathVariable UUID id,Model model) {
-        model.addAttribute("categories", categoryService.getAllCategories());
-        model.addAttribute("products", productService.getAllProducts());
-        model.addAttribute("productsIndex", productService.getOneById(id));
-
-        return "stock/add";
-    }
     @GetMapping("/edit/{id}")
     public String getProductToEdit(@PathVariable UUID id,Model model) {
         model.addAttribute("products", productService.getOneById(id));
@@ -61,36 +44,64 @@ public class ProductController {
         return "products/edit";
     }
     @PostMapping ("/edit/{id}")
-    public String updateProduct(@PathVariable UUID id,@ModelAttribute ProductRequest productRequest, @RequestParam("imageFile") MultipartFile imageFile, Model model) {
+    public String updateProduct(@PathVariable UUID id,@ModelAttribute ProductRequest productRequest,
+                                @RequestParam("imageFile") MultipartFile imageFile,
+                                Model model,Authentication authentication) {
+        String username = authentication.getName();
         // Implement the update logic here, including updating the database and handling image uploads.
-        model.addAttribute("categories", categoryService.getAllCategories());
-        model.addAttribute("units", unitService.getAllUnit());
-
-        productService.updateProduct(productRequest, imageFile, id);
-        return "redirect:/products";
+        if (productService.productNameIsExisted(productRequest)&&(!productRequest.getName().equals(productService.getOneById(id).getName()))) {
+            model.addAttribute("products", productService.getOneById(id));
+            model.addAttribute("categories", categoryService.getAllCategories());
+            model.addAttribute("nameError","มีสินค้าชื้อนี้แล้ว");
+            model.addAttribute("units", unitService.getAllUnit());
+            return "products/edit";
+        }
+        productService.updateProduct(productRequest, imageFile, id,username);
+        return "redirect:/inventory";
     }
     @GetMapping("/create")
     public String getProductForm(Model model,ProductRequest productRequest) {
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("units", unitService.getAllUnit());
-
+        model.addAttribute("products",productService.getAllProducts());
         model.addAttribute("product", productRequest);
         return "products/create";
     }
 
     @PostMapping("/create")
-    public String createProduct(@ModelAttribute ProductRequest productRequest, @RequestParam("imageFile") MultipartFile file, Model model) {
+    public String createProduct(@ModelAttribute ProductRequest productRequest,
+                                @RequestParam("imageFile") MultipartFile file,
+                                Model model,
+                                Authentication authentication) {
+        String username = authentication.getName();
         model.addAttribute("product", productRequest);
-        if (productService.productNameIsExisted(productRequest)) {
+        if (productService.productNameIsExisted(productRequest)||productRequest.getPrice() < 1
+                || productRequest.getRequireProduct() < 1 || productRequest.getStock() < 1||productRequest.getRequireProduct()<productRequest.getStock()) {
+            model.addAttribute("nameError",productService.productNameIsExisted(productRequest)?"มีสินค้าชื่อนี้แล้ว":null);
+            model.addAttribute("priceError", productRequest.getPrice() < 1 ? "กรุณากรอกราคาสินค้ามากกว่าเท่ากับ 1" : null);
+            model.addAttribute("requireError", productRequest.getRequireProduct() < 1 ? "กรุณากรอกจำนวนสินค้าที่ต้องการมากกว่าเท่ากับ 1" : null);
+            model.addAttribute("stockOverError", productRequest.getRequireProduct()<productRequest.getStock() ? "กรุณากรอกจำนวนสินค้ามากเกินความต้องการ" : null);
+            model.addAttribute("stockError", productRequest.getStock() < 1 ? "กรุณากรอกจำนวนสินค้ามากกว่าเท่ากับ 1" : null);
             model.addAttribute("categories", categoryService.getAllCategories());
             model.addAttribute("units", unitService.getAllUnit());
-            model.addAttribute("nameError","มีสินค้าชื้อนี้แล้ว");
-            return "products/create"; // Return to the form with a specific error message
+            return "products/create"; // Return to the form page with error messages
         }
 
-        productService.createProduct(productRequest, file);
+
+        productService.createProduct(productRequest, file,username);
         model.addAttribute("units", unitService.getAllUnit());
         model.addAttribute("categories", categoryService.getAllCategories());
-        return "redirect:/products";
+        return "redirect:/inventory";
+    }
+    @PostMapping("/delete/{id}")
+    public String deleteProduct(@PathVariable UUID id, @ModelAttribute ProductRequest productRequest,
+                                Model model,Authentication authentication){
+        String username = authentication.getName();
+        productService.deleteProductById(id,username);
+        model.addAttribute("units", unitService.getAllUnit());
+        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("product", productRequest);
+
+        return "redirect:/inventory";
     }
 }

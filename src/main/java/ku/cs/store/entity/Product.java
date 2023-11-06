@@ -1,6 +1,8 @@
 package ku.cs.store.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.Date;
@@ -13,12 +15,17 @@ public class Product {
     @Id
     @GeneratedValue
     private UUID id;
+    @NotNull(message = "กรุณากรอกชื่อสินค้า")
     private String name;
+    @NotNull(message = "กรุณากรอกรายละเอียดสินค้า")
 
+    private String detail;
+
+    @Min(value = 1,message ="กรุณากรอกเลขมากกว่าเท่ากับ 1")
     private double price;
-
+    @Min(value = 1,message = "กรุณากรอกเลขมากกว่าเท่ากับ 1")
     private int stock;
-
+    @Min(value = 1,message = "กรุณากรอกเลขมากกว่าเท่ากับ 1")
     private int requireProduct;
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDateTime;
@@ -35,4 +42,5 @@ public class Product {
     @Lob
     @Column(columnDefinition = "MEDIUMBLOB")
     private String  imageFile;
+
  }

@@ -7,9 +7,11 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </head>
 
-<nav class="navbar navbar-expand-lg bg-body-tertiary" th:fragment="header">
-  <div class="container-fluid">
-    <a class="navbar-brand" th:href="@{/}">Store</a>
+<div style="background: #FE4800">
+<nav class="navbar navbar-expand-lg bg-body-tertiary" style="background: #fd9b51 !important;" th:fragment="header">
+<!--  <div  class="card card-compact  bg-base-100 shadow-xl" style="border-radius: 40px ">-->
+    <a class="navbar-brand" style="font-family: Inknut Antiqua ;font-size: 35px " th:href="@{/}">Indian Spices</a>
+    <img style="width: 50px ; height:50px; border-radius: 999px ;display: block" src="https://s3-alpha-sig.figma.com/img/e279/00b5/605c9b9ed15ec25474e686b0794ec954?Expires=1699228800&Signature=Lbp-flVndkEjfhDDgtstBXU7XyvAGvtaBS4i3zue7aAoUFScPnohWD85G-AzA3Z-lrJkgyz3COm1gOMJBnczHy~Pqrc2lwDGhLHbjXRd78d5ZtsJAqc9d~ixCgjGzJg2xzEuTUcWOCCed-~9uDiqXMRTB7527rjIShLBT3Rnx6hu6BJERglJe9H2HFqkv8qCDYXZO8x7f6SaiISFVbS7OyypDPz6uwEtqBK2SxkOIr9bxuhEGJFuVs61yV82sZqzfR08IusQZKFU069kJ6wT2mxw4rnhm9fWZtEsqkmviXa9m0AaLSGOpYOn2bH3r5zGVPpIamVc5aeB-5ZR58ehyQ__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4" />
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -25,8 +27,9 @@
             จัดการสินค้า
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" th:href="@{/products}">คลังสินค้า</a></li>
-            <li><a class="dropdown-item" th:href="@{/purchases/create}">สร้างใบสั่งซื้อ</a></li>
+            <li><a class="dropdown-item" th:href="@{/inventory}">คลังสินค้า</a></li>
+            <li><a class="dropdown-item" th:href="@{/inventory/history}">ประวัติสินค้า</a></li>
+            <li><a class="dropdown-item" th:href="@{/salesHistory}">ประวัติการขายสินค้า</a></li>
           </ul>
         </li>
 
@@ -34,13 +37,10 @@
           <a class="nav-link" th:href="@{/categories/add}">เพิ่มประเภทสินค้า</a>
         </li>
         <li class="nav-item" sec:authorize="isAuthenticated()">
-          <a class="nav-link" th:href="@{/unit/add}">เพิ่มหน่วยสินค้า</a>
+          <a class="nav-link" th:href="@{/unit}">เพิ่มหน่วยสินค้า</a>
         </li>
         <li class="nav-item" sec:authorize="isAuthenticated()">
           <a class="nav-link" th:href="@{/products/create}">เพิ่มสินค้าใหม่</a>
-        </li>
-        <li class="nav-item" sec:authorize="isAuthenticated()">
-          <a class="nav-link" th:href="@{/safety}">Safety stock</a>
         </li>
         <li class="nav-item" >
           <a class="nav-link" th:href="@{/signup}">เพิ่มบัญชีพนักงาน</a>
@@ -59,4 +59,5 @@
     </div>
   </div>
 </nav>
+</div>
 </html>

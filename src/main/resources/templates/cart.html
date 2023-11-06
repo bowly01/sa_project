@@ -16,18 +16,89 @@
   <table class="table table-bordered table-striped table-hover">
     <thead class="thead-dark">
     <tr style="text-align: center; vertical-align: top; " class="table-secondary">
-      <th>Drink</th>
+      <th>Product</th>
       <th>Price</th>
       <th>Quantity</th>
       <th>Subtotal</th>
     </tr>
     </thead>
     <tbody>
+
     <tr th:if="${cart ne null}" th:each="item : ${cart.items}" >
       <td th:text="${item.product.name}"></td>
       <td style="text-align: right" th:text="${#numbers.formatDecimal(item.product.price, 0, 'COMMA', 2, 'POINT')}"></td>
       <td style="text-align: right" th:text="${item.quantity}"></td>
       <td style="text-align: right" th:text="${#numbers.formatDecimal(item.getSubtotal(), 0, 'COMMA', 2, 'POINT')}"></td>
+      <td>
+<!--        <form th:action="@{'/orders/delete/' + order.id + '/' + item.product.id}" method="post">-->
+<!--          <button id="delete-button" type="submit" class="btn btn-danger">Delete</button>-->
+<!--        </form>-->
+<!--        <script type="text/javascript">-->
+<!--          document.getElementById('delete-button').addEventListener('click', function (event) {-->
+<!--            event.preventDefault();-->
+<!--            if (confirm('คุณแน่ใจหรือไม่ที่ต้องการลบรายการสินค้านี้?')) {-->
+<!--              var orderId = this.getAttribute('data-order-id');-->
+<!--              var productId = this.getAttribute('data-product-id');-->
+
+<!--              fetch(`/orders/delete/${orderId}/${productId}`, {-->
+<!--                method: 'DELETE',-->
+<!--                headers: {-->
+<!--                  'Content-Type': 'application/json',-->
+<!--                },-->
+<!--              })-->
+<!--                      .then((response) => {-->
+<!--                        if (response.ok) {-->
+<!--                          location.reload(); // รีโหลดหน้าเพื่ออัปเดตรายการรายการสินค้า-->
+<!--                        } else {-->
+<!--                          alert('เกิดข้อผิดพลาดในการลบรายการสินค้า');-->
+<!--                        }-->
+<!--                      })-->
+<!--                      .catch((error) => {-->
+<!--                        console.error('เกิดข้อผิดพลาด: ' + error);-->
+<!--                      });-->
+<!--            }-->
+<!--          });-->
+<!--        </script>-->
+          <form id="delete-form" method="post">
+              <button id="delete-button" type="submit" class="btn btn-danger"
+                      data-order-id="${order.id}" data-product-id="${item.product.id}">Delete</button>
+          </form>
+          <script type="text/javascript">
+              document.getElementById('delete-button').addEventListener('click', function (event) {
+                  event.preventDefault();
+                  if (confirm('คุณแน่ใจหรือไม่ที่ต้องการลบรายการสินค้านี้?')) {
+                      var orderId = this.getAttribute('data-order-id');
+                      var productId = this.getAttribute('data-product-id');
+
+                      fetch(`/orders/delete/${orderId}/${productId}`, {
+                          method: 'DELETE',
+                          headers: {
+                              'Content-Type': 'application/json',
+                          },
+                      })
+                          .then((response) => {
+                              if (response.ok) {
+                                  location.reload();
+                              } else {
+                                  alert('เกิดข้อผิดพลาดในการลบรายการสินค้า');
+                              }
+                          })
+                          .catch((error) => {
+                              console.error('เกิดข้อผิดพลาด: ' + error);
+                          });
+                  }
+              });
+          </script>
+
+
+
+
+
+
+
+
+      </td>
+
     </tr>
     </tbody>
   </table>
@@ -40,6 +111,9 @@
     <button id="submit-button" type="submit" class="btn btn-primary">Submit Order</button>
   </form>
 
-  </div>
+
+
+</div>
 </body>
 </html>
+

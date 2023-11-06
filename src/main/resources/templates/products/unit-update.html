@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Store Application</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <script src="https://kit.fontawesome.com/3532fa6739.js" crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  <style>
+    body{
+      height: 100vh;
+      background: linear-gradient(
+              to right,
+              white 0%,
+              white 50%,
+              #FFAF3FD9 0%,
+              #FFAF3FD9 50%
+      );
+    }
+  </style>
+</head>
+<body>
+<div th:insert="~{fragments/header :: header}"></div>
+<div class="row">
+  <div class="col-xl-6" style="padding-top: 5%">
+    <a  th:href="@{/inventory}" class="btn" >
+      <i class="fa-solid fa-circle-arrow-left fa-2xl"></i>    </a>
+
+    <div class="row">
+      <div class="col-xl-1"></div>
+      <div class="col-xl-10">
+        <table class="table table-hover table-fixed table-bordered">
+          <thead class="thead-dark">
+          <tr>
+            <th>ชื่อหน่วยสินค้า</th>
+            <th>จำนวนต่อหน่วย</th>
+            <th>แก้ไขหน่วย</th>
+          </thead>
+          <tbody>
+          <th:block th:if="${units != null}">
+            <tr th:each="unit:${units}">
+              <td th:text="${unit.getName()}"></td>
+              <td th:text="${unit.getQuantity()}"></td>
+              <td>
+                <a type="button" class="btn btn-primary" th:href="@{'/unit/edit/' + ${unit.id}}">แก้ไข</a>
+              </td>
+            </tr>
+          </th:block>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+<!--  delete modal-->
+  <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteConfirmationModalLabel">ลบหน่วยนับสินค้า</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>คุณต้องการยืนยันการลบหน่วยนับรายการนี้หรือไม่?</p>
+        </div>
+        <div class="modal-footer">
+          <form th:action="@{/unit/delete/{unitId}(unitId=${unitIndex.id})}" th:method="delete">
+            <input type="hidden" name="_method" value="delete" />
+            <button type="submit" class="btn btn-danger">Delete</button>
+          </form>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-6" >
+    <div class="row">
+      <div class="col-xl-1"></div>
+      <div class="col-xl-10" style="padding-top: 10%">
+        <div class="card container" >
+          <div class="row" style="padding-top: 10px">
+            <div class="col-xl-4"></div>
+            <div class="col-xl-6"><h1 class="">แก้ไขหน่วย</h1></div>
+          </div>
+
+          <form action="#" th:action="@{/unit/edit/{id}(id=${unitIndex.id})}" method="POST" th:object="${unitIndex}" onsubmit="return confirmSave();">
+            <div class="mb-3">
+              <label for="inputName">ชื่อหน่วยสินค้า</label>
+              <input id="inputName" type="input" class="form-control"
+                     name="name" th:value="${unitIndex.name}" required>
+              <div id="error-msg" class="alert alert-danger"
+                   th:if="${nameError}">
+                <span th:text="${nameError}"></span>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="inputQuantity">กำหนดจำนวนต่อหน่วย</label>
+              <input id="inputQuantity" type="number" class="form-control"
+                     name="quantity" th:value="${unitIndex.quantity}" required>
+              <div id="quantity-error-msg" class="alert alert-danger"
+                   th:if="${quantityError}">
+                <span th:text="${quantityError}"></span>
+              </div>
+            </div>
+            <div class="row" style="padding-bottom: 10px">
+              <div class="col-xl-5"></div>
+              <div class="col-xl-6">
+                <button id="submit-button" type="submit" class="btn btn-primary">บันทึก</button>
+
+              </div>
+            </div>
+          </form>
+          <div>
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal">Delete</button>
+          </div>
+        </div>
+
+      </div>
+      <div class="col-xl-1"></div>
+    </div>
+  </div>
+</div>
+<!--<script>-->
+<!--  document.addEventListener('DOMContentLoaded', function () {-->
+<!--    // เลือกทุกปุ่มลบ-->
+<!--    const deleteLinks = document.querySelectorAll('[button-id^="deleteLink-"]');-->
+<!--    // สร้างลิสเตอร์สำหรับแต่ละปุ่มลบ-->
+<!--    deleteLinks.forEach(function (deleteLink) {-->
+<!--      deleteLink.addEventListener('click', function () {-->
+<!--        console.log(deleteLink.id)-->
+<!--        console.log(deleteLink.innerHTML)-->
+
+<!--        // เรียกข้อมูล ID ของปุ่มลบ-->
+<!--        const unitId = parseInt(deleteLink.id);-->
+<!--        console.log("id="+unitId)-->
+<!--        // เรียก Modal ที่ต้องการแสดง-->
+<!--        const deleteConfirmationModal = document.getElementById('deleteConfirmationModal');-->
+
+<!--        // เพิ่มลิสเตอร์สำหรับปุ่ม Delete ใน Modal-->
+<!--        const deleteButton = document.getElementById('deleteButton');-->
+<!--        deleteButton.addEventListener('click', function () {-->
+<!--// ตรวจสอบค่าของ unitId-->
+<!--          if (unitId) {-->
+<!--            // Create a Fetch request to delete the unit-->
+<!--            fetch(`/units/delete/${unitId}`, {-->
+<!--              method: 'DELETE',-->
+<!--            })-->
+<!--                    .then(response => {-->
+<!--                      if (response.status === 200 || response.status === 204) {-->
+<!--                        // Delete successful, close the modal-->
+<!--                        deleteConfirmationModal.style.display = 'none';-->
+<!--                        // You can also reload the unit list on success-->
+<!--                        window.location.reload();-->
+<!--                      } else {-->
+<!--                        console.error("เช็ค"+unitId)-->
+<!--                        // Handle the error (e.g., show an error message)-->
+<!--                      }-->
+<!--                    })-->
+<!--                    .catch(error => {-->
+<!--                      // Handle any network or fetch errors-->
+<!--                    });-->
+<!--          } else {-->
+<!--            // unitId is invalid-->
+<!--            console.error("unitId is invalid");-->
+<!--          }-->
+<!--        });-->
+
+<!--        // เพิ่มลิสเตอร์สำหรับปุ่ม Cancel ใน Modal-->
+<!--        const cancelButton = document.getElementById('cancelButton');-->
+<!--        cancelButton.addEventListener('click', function () {-->
+<!--          deleteConfirmationModal.style.display = 'none';-->
+<!--        });-->
+
+<!--        // แสดง Modal-->
+<!--        deleteConfirmationModal.style.display = 'block';-->
+<!--      });-->
+<!--    });-->
+<!--  });-->
+
+
+<!--</script>-->
+<script type="text/javascript">
+  function confirmSave() {
+    return confirm("คุณแน่ใจหรือไม่ที่ต้องการบันทึกข้อมูล?");
+  }
+
+</script>
+
+</body>
+</html>
