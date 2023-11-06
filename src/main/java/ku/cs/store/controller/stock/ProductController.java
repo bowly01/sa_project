@@ -63,7 +63,7 @@ public class ProductController {
     public String getProductForm(Model model,ProductRequest productRequest) {
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("units", unitService.getAllUnit());
-
+        model.addAttribute("products",productService.getAllProducts());
         model.addAttribute("product", productRequest);
         return "products/create";
     }

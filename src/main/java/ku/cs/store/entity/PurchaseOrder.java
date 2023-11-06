@@ -34,4 +34,12 @@ public class PurchaseOrder {
         return total;
     }
 
+    public StatusOrder getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusOrder status) {
+        this.status = status;
+    }
+
 }

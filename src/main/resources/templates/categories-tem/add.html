@@ -5,16 +5,8 @@
   <title>Store Application</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
   <script src="https://kit.fontawesome.com/3532fa6739.js" crossorigin="anonymous"></script>
-  <!-- นำเข้าไลบรารี Bootstrap CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
-  <!-- นำเข้าไลบรารี jQuery -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-  <!-- นำเข้าไลบรารี Bootstrap JavaScript -->
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="/static/css/crude.css">
-
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
   <style>
     body{
       height: 100vh;
@@ -38,26 +30,24 @@
     <div class="row">
       <div class="col-xl-1"></div>
       <div class="col-xl-10">
-        <table id="myCategoryTable" class="table table-hover table-fixed table-bordered">
+        <table class="table table-bordered table-striped table-hover table-fixed" style="width: 650px; height: 450px;">
           <thead class="thead-dark">
           <tr>
             <th>ชื่อหน่วยสินค้า</th>
             <th>แก้ไขประเภทสินค้า</th>
-            <th>ลบประเภทสินค้า</th>
           </tr>
           </thead>
           <tbody>
+          <th:block th:if="${categories != null}">
           <tr th:each="category:${categories}">
-            <td th:text="${category.name}"></td>
+            <td th:text="${category.categoryName}"></td>
             <td>
               <!-- Edit Button-->
-              <a class="btn btn-primary" th:href="@{'/categories/update/' + ${category.id}}" data-category-id="${category.id}" id="updateLink">แก้ไข</a>
-            </td>
-            <td>
-              <!-- Delete Button-->
-              <a class="btn btn-danger" th:href="@{'/categories/delete/' + ${category.id}}" data-category-id="${category.id}" id="deleteLink">ลบ</a>
+<!--              go to categories-tem/update-->
+              <a class="btn btn-info" th:href="@{/categories/update/{categoryId}(categoryId=${category.id})}">แก้ไข</a>
             </td>
           </tr>
+          </th:block>
           </tbody>
         </table>
 
@@ -67,18 +57,18 @@
   <div class="col-xl-6" >
     <div class="row">
       <div class="col-xl-1"></div>
-      <div class="col-xl-10" style="padding-top: 10%">
+      <div class="col-xl-10" style="padding-top: 20%">
         <div class="card container" >
           <div class="row" style="padding-top: 10px">
             <div class="col-xl-4"></div>
-            <div class="col-xl-6"><h1 class="">เพิ่มประเภทสินค้า</h1></div>
+            <div class="col-xl-6"><h4>เพิ่มประเภทสินค้า</h4></div>
           </div>
 
           <form action="#" th:action="@{/categories/add}" method="POST">
             <div class="mb-3">
               <label for="inputName">ชื่อประเภทสินค้า</label>
               <input id="inputName" type="input" class="form-control"
-                     name="name" required>
+                     name="categoryName" required>
               <div id="error-msg" class="alert alert-danger"
                    th:if="${nameError}">
                 <span th:text="${nameError}"></span>
@@ -98,8 +88,14 @@
         </div>
 
       </div>
-      <div class="col-xl-1"></div>
+      <div class="col-xl-1">
+      </div>
 
+    </div>
+    <div class="row">
+      <div class="col-xl-1"></div>
+      <div class="col-xl-10" style="padding-top: 10%;">
+      </div>
     </div>
 
   </div>

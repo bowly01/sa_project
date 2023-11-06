@@ -27,7 +27,7 @@ public class UnitController {
     public String getUnitToEdit(@PathVariable Long id,Model model){
         model.addAttribute("units",unitService.getAllUnit());
         model.addAttribute("unitIndex",unitService.getOneById(id));
-        return "products/unit-custom";
+        return "products/unit-update";
     }
     @PostMapping("/edit/{id}")
     public String editUnit(@PathVariable("id") Long id, @ModelAttribute Unit updateUnit, Model model){
@@ -35,7 +35,7 @@ public class UnitController {
             model.addAttribute("nameError",unitService.unitNameIsExisted(updateUnit)?"มีหน่วยสินค้าชื่อนี้แล้ว":null);
             model.addAttribute("quantityError", updateUnit.getQuantity() < 1 ? "กรุณากรอกจำนวนสินค้ามากกว่าเท่ากับ 1" : null);
             model.addAttribute("units", unitService.getAllUnit());
-            return "products/unit-custom"; // Return to the form page with error messages
+            return "products/unit-update"; // Return to the form page with error messages
         }
         model.addAttribute("units",unitService.getAllUnit());
         unitService.editUnit(id,updateUnit);
@@ -49,7 +49,6 @@ public class UnitController {
 //    }
     @DeleteMapping("/delete/{unitId}")
     public ResponseEntity<String> deleteUnit(@PathVariable("unitId") Long unitId) {
-        System.out.print("gg");
         try {
             // ในส่วนนี้คุณควรเรียกเมธอดหรือฟังก์ชันที่ใช้ในการลบหน่วยนับ
             unitService.deleteUnitById(unitId);

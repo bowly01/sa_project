@@ -24,64 +24,87 @@
 
 <div th:insert="~{fragments/header :: header}"></div>
 <div class="row">
-  <div class="col-xl-6">
+  <div class="col-xl-6" style="padding-top: 5%;">
+    <table class="table table-bordered table-striped table-hover table-fixed" style="width: 650px; height: 450px;">
+      <thead class="thead-dark">
+      <tr>
+        <th>ชื่อสินค้า</th>
+        <th>รายละเอียดสินค้า</th>
+        <th>จำนวนคงคลังต่อหน่วย</th>
+        <th>ราคาสินค้าต่อหน่วย</th>
+      </tr>
+      </thead>
+      <tbody>
+      <th:block th:if="${products != null}">
+        <tr th:each="product:${products}">
+          <td th:text="${product.name}"></td>
+          <td th:text="${product.detail}"></td>
+          <td th:text="${product.stock}"></td>
+          <td style="text-align: right" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 2, 'POINT')}"></td>
+
+        </tr>
+      </th:block>
+      </tbody>
+    </table>
   </div>
-  <div class="col-xl-6" style="padding-left: 3%;padding-right: 3%; padding-top: 5%; padding-bottom: 10%">
-    <div class="card" style=" border-radius: 33px;height: 100%;width: 100%;padding-left: 10%;padding-top: 5%;padding-right: 5%">
+  <div class="col-xl-6" style="padding-top: 5%;">
+    <div class="card" style=" border-radius: 33px;">
+      <div>
+        <form th:object="${product}" action="#" th:action="@{/products/create}" method="POST" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="inputName">ชื่อสินค้า</label>
+            <input id="inputName" type="text" class="form-control" th:field="*{name}" required>
+            <div id="error-msg" class="alert alert-danger" th:if="${nameError}"><span th:text="${nameError}"></span></div>
+            <div class="alert alert-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+          </div>
+          <div class="mb-3">
+            <label for="inputDetail">รายละเอียดสินค้า</label>
+            <input id="inputDetail" type="text" class="form-control" th:field="*{detail}" required>
+            <div class="alert alert-danger" th:if="${#fields.hasErrors('detail')}" th:errors="*{detail}"></div>
+          </div>
+          <div class="mb-3">
+            <label for="inputCategory">ประเภทสินค้า</label>
+            <select class="form-control" id="inputCategory" name="categoryId">
+              <option th:each="category : ${categories}"
+                      th:value="${category.id}" th:text="${category.getCategoryName()}">
+              </option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="inputPrice">ราคาสินค้า</label>
+            <input id="inputPrice" type="number" class="form-control" name="price" required>
+            <div id="priceError" class="alert alert-danger" th:if="${priceError != null}"><span th:text="${priceError}"></span></div>
+          </div>
+          <div class="mb-3">
+            <label for="inputRequire">จำนวนสินค้าที่ต้องการ</label>
+            <input id="inputRequire" type="number" class="form-control" name="requireProduct" required>
+            <div id="requireError" class="alert alert-danger" th:if="${requireError != null}"><span th:text="${requireError}"></span></div>
+          </div>
+          <div class="mb-3">
+            <label for="inputStock">จำนวนสินค้า</label>
+            <input id="inputStock" type="number" class="form-control" name="stock" required>
+            <div id="stockError" class="alert alert-danger" th:if="${stockError != null}"><span th:text="${stockError}"></span></div>
+          </div>
 
-      <form th:object="${product}" action="#" th:action="@{/products/create}" method="POST" enctype="multipart/form-data">
-        <div class="mb-3">
-          <label for="inputName">ชื่อสินค้า</label>
-          <input id="inputName" type="text" class="form-control" th:field="*{name}" required>
-          <div id="error-msg" class="alert alert-danger" th:if="${nameError}"><span th:text="${nameError}"></span></div>
-          <div class="alert alert-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
-        </div>
-        <div class="mb-3">
-          <label for="inputDetail">รายละเอียดสินค้า</label>
-          <input id="inputDetail" type="text" class="form-control" th:field="*{detail}" required>
-          <div class="alert alert-danger" th:if="${#fields.hasErrors('detail')}" th:errors="*{detail}"></div>
-        </div>
-        <div class="mb-3">
-          <label for="inputCategory">ประเภทสินค้า</label>
-          <select class="form-control" id="inputCategory" name="categoryId">
-            <option th:each="category : ${categories}"
-                    th:value="${category.id}" th:text="${category.name}">
-            </option>
-          </select>
-        </div>
-        <div class="mb-3">
-          <label for="inputPrice">ราคาสินค้า</label>
-          <input id="inputPrice" type="number" class="form-control" name="price" required>
-          <div id="priceError" class="alert alert-danger" th:if="${priceError != null}"><span th:text="${priceError}"></span></div>
-        </div>
-        <div class="mb-3">
-          <label for="inputRequire">จำนวนสินค้าที่ต้องการ</label>
-          <input id="inputRequire" type="number" class="form-control" name="requireProduct" required>
-          <div id="requireError" class="alert alert-danger" th:if="${requireError != null}"><span th:text="${requireError}"></span></div>
-        </div>
-        <div class="mb-3">
-          <label for="inputStock">จำนวนสินค้า</label>
-          <input id="inputStock" type="number" class="form-control" name="stock" required>
-          <div id="stockError" class="alert alert-danger" th:if="${stockError != null}"><span th:text="${stockError}"></span></div>
-        </div>
+          <div class="mb-3">
+            <label for="inputUnit">Unit</label>
+            <select class="form-control" id="inputUnit" name="unitId">
+              <option th:each="unit : ${units}"
+                      th:value="${unit.id}" th:text="${unit.name}">
+              </option>
+            </select>
+          </div>
 
-        <div class="mb-3">
-          <label for="inputUnit">Unit</label>
-          <select class="form-control" id="inputUnit" name="unitId">
-            <option th:each="unit : ${units}"
-                    th:value="${unit.id}" th:text="${unit.name}">
-            </option>
-          </select>
-        </div>
+          <div class="mb-3">
+            <label for="imageFile">Image</label>
+            <input type="file" id="imageFile" name="imageFile" accept="image/*">
+          </div>
+          <button id="submit-button" type="submit" class="btn btn-primary"
+                  onclick="return confirm('คุณแน่ใจหรือไม่ว่าต้องการส่งแบบฟอร์มนี้?');">
+            สร้างสินค้าใหม่</button>
+        </form>
+      </div>
 
-        <div class="mb-3">
-          <label for="imageFile">Image</label>
-          <input type="file" id="imageFile" name="imageFile" accept="image/*">
-        </div>
-        <button id="submit-button" type="submit" class="btn btn-primary"
-                onclick="return confirm('คุณแน่ใจหรือไม่ว่าต้องการส่งแบบฟอร์มนี้?');">
-          สร้างสินค้าใหม่</button>
-      </form>
 
     </div>
 </div>

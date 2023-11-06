@@ -36,8 +36,6 @@
                         <th>ชื่อหน่วยสินค้า</th>
                         <th>จำนวนต่อหน่วย</th>
                         <th>แก้ไขหน่วย</th>
-                        <th>ลบหน่วย</th>
-                    </tr>
                     </thead>
                     <tbody>
                     <th:block th:if="${units != null}">
@@ -45,50 +43,15 @@
                         <td th:text="${unit.getName()}"></td>
                         <td th:text="${unit.getQuantity()}"></td>
                         <td>
-                            <!-- Edit-->
-<!--                            <div class="modal fade" id="editCategoryModal" tabindex="-1"-->
-<!--                                 role="dialog" aria-labelledby="EditCategoryModalLabel"-->
-<!--                                 aria-hidden="true">-->
-<!--                                <div class="modal-dialog modal-dialog-centered" role="document">-->
-<!--                                    <div class="modal-content">-->
-<!--                                        <div class="modal-header">-->
-<!--                                            <h5 class="modal-title" id="EditTitle">แก้ไขประเภทสินค้า</h5>-->
-<!--                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
-<!--                                        </div>-->
-<!--                                        <div class="modal-body">-->
-
-<!--                                            <form th:action="@{/unit/edit/{id}(id=${unit.id})}" method="post">-->
-<!--                                                <div class="form-group">-->
-<!--                                                    <label for="inputName">ชื่อหน่วยสินค้า</label>-->
-<!--                                                    <input type="text" th:value="${unit.name}" class="form-control" name="name" required>-->
-<!--                                                    <div id="error-msg1" class="alert alert-danger"-->
-<!--                                                         th:if="${nameError}">-->
-<!--                                                        <span th:text="${nameError}"></span>-->
-<!--                                                    </div>-->
-<!--                                                    <label for="inputName">ชื่อหน่วยสินค้า</label>-->
-<!--                                                    <input type="number" th:value="${unit.quantity}" class="form-control" name="quantity" required>-->
-<!--                                                    <div id="error-msg2" class="alert alert-danger"-->
-<!--                                                         th:if="${quantityError}">-->
-<!--                                                        <span th:text="${quantityError}"></span>-->
-<!--                                                    </div>-->
-<!--                                                    <button type="submit" class="btn btn-primary">submit</button>-->
-<!--                                                </div>-->
-<!--                                            </form>-->
-<!--                                        </div>-->
-
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editCategoryModal">Edit</button>-->
-                                <label th:text="'deleteLink-' + ${unit.getId()}"></label>
+                            <a type="button" class="btn btn-primary" th:href="@{'/unit/edit/' + ${unit.id}}">แก้ไข</a>
                         </td>
 
-                        <td>
+<!--                        <td>-->
                         <!-- Delete-->
 <!--                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" th:data-unit-id="${unit.getId()}" id="deleteLink">ลบ</button>-->
-                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" th:id="${unit.getId()}" th:button-id="'deleteLink-' + ${unit.getId()}">ลบ</button>
+<!--                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" th:id="${unit.getId()}" th:button-id="'deleteLink-' + ${unit.getId()}">ลบ</button>-->
 
-                        </td>
+<!--                        </td>-->
                     </tr>
                     </th:block>
                     </tbody>
@@ -160,65 +123,65 @@
         </div>
     </div>
 </div>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // เลือกทุกปุ่มลบ
-        const deleteLinks = document.querySelectorAll('[button-id^="deleteLink-"]');
-        // สร้างลิสเตอร์สำหรับแต่ละปุ่มลบ
-        deleteLinks.forEach(function (deleteLink) {
-            deleteLink.addEventListener('click', function () {
-                console.log(deleteLink.id)
-                console.log(deleteLink.innerHTML)
+<!--<script>-->
+<!--    document.addEventListener('DOMContentLoaded', function () {-->
+<!--        // เลือกทุกปุ่มลบ-->
+<!--        const deleteLinks = document.querySelectorAll('[button-id^="deleteLink-"]');-->
+<!--        // สร้างลิสเตอร์สำหรับแต่ละปุ่มลบ-->
+<!--        deleteLinks.forEach(function (deleteLink) {-->
+<!--            deleteLink.addEventListener('click', function () {-->
+<!--                console.log(deleteLink.id)-->
+<!--                console.log(deleteLink.innerHTML)-->
 
-                // เรียกข้อมูล ID ของปุ่มลบ
-                const unitId = parseInt(deleteLink.id);
-                    console.log("id="+unitId)
-                // เรียก Modal ที่ต้องการแสดง
-                const deleteConfirmationModal = document.getElementById('deleteConfirmationModal');
+<!--                // เรียกข้อมูล ID ของปุ่มลบ-->
+<!--                const unitId = parseInt(deleteLink.id);-->
+<!--                    console.log("id="+unitId)-->
+<!--                // เรียก Modal ที่ต้องการแสดง-->
+<!--                const deleteConfirmationModal = document.getElementById('deleteConfirmationModal');-->
 
-                // เพิ่มลิสเตอร์สำหรับปุ่ม Delete ใน Modal
-                const deleteButton = document.getElementById('deleteButton');
-                deleteButton.addEventListener('click', function () {
-// ตรวจสอบค่าของ unitId
-                    if (unitId) {
-                        // Create a Fetch request to delete the unit
-                        fetch(`/units/delete/${unitId}`, {
-                            method: 'DELETE',
-                        })
-                            .then(response => {
-                                if (response.status === 200 || response.status === 204) {
-                                    // Delete successful, close the modal
-                                    deleteConfirmationModal.style.display = 'none';
-                                    // You can also reload the unit list on success
-                                    window.location.reload();
-                                } else {
-                                    console.error("เช็ค"+unitId)
-                                    // Handle the error (e.g., show an error message)
-                                }
-                            })
-                            .catch(error => {
-                                // Handle any network or fetch errors
-                            });
-                    } else {
-                        // unitId is invalid
-                        console.error("unitId is invalid");
-                    }
-                });
+<!--                // เพิ่มลิสเตอร์สำหรับปุ่ม Delete ใน Modal-->
+<!--                const deleteButton = document.getElementById('deleteButton');-->
+<!--                deleteButton.addEventListener('click', function () {-->
+<!--// ตรวจสอบค่าของ unitId-->
+<!--                    if (unitId) {-->
+<!--                        // Create a Fetch request to delete the unit-->
+<!--                        fetch(`/units/delete/${unitId}`, {-->
+<!--                            method: 'DELETE',-->
+<!--                        })-->
+<!--                            .then(response => {-->
+<!--                                if (response.status === 200 || response.status === 204) {-->
+<!--                                    // Delete successful, close the modal-->
+<!--                                    deleteConfirmationModal.style.display = 'none';-->
+<!--                                    // You can also reload the unit list on success-->
+<!--                                    window.location.reload();-->
+<!--                                } else {-->
+<!--                                    console.error("เช็ค"+unitId)-->
+<!--                                    // Handle the error (e.g., show an error message)-->
+<!--                                }-->
+<!--                            })-->
+<!--                            .catch(error => {-->
+<!--                                // Handle any network or fetch errors-->
+<!--                            });-->
+<!--                    } else {-->
+<!--                        // unitId is invalid-->
+<!--                        console.error("unitId is invalid");-->
+<!--                    }-->
+<!--                });-->
 
-                // เพิ่มลิสเตอร์สำหรับปุ่ม Cancel ใน Modal
-                const cancelButton = document.getElementById('cancelButton');
-                cancelButton.addEventListener('click', function () {
-                    deleteConfirmationModal.style.display = 'none';
-                });
+<!--                // เพิ่มลิสเตอร์สำหรับปุ่ม Cancel ใน Modal-->
+<!--                const cancelButton = document.getElementById('cancelButton');-->
+<!--                cancelButton.addEventListener('click', function () {-->
+<!--                    deleteConfirmationModal.style.display = 'none';-->
+<!--                });-->
 
-                // แสดง Modal
-                deleteConfirmationModal.style.display = 'block';
-            });
-        });
-    });
+<!--                // แสดง Modal-->
+<!--                deleteConfirmationModal.style.display = 'block';-->
+<!--            });-->
+<!--        });-->
+<!--    });-->
 
 
-</script>
+<!--</script>-->
 
 </body>
 </html>

@@ -13,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 
 @Service
@@ -69,17 +66,12 @@ public class OrderService {
             } else {
             }
         }
-
-
+        currentOrder.setTimestamp(LocalDateTime.now());
         currentOrder.setStatus(StatusOrder.CONFIRM);
-
-
         orderRepository.save(currentOrder);
-
         currentOrderId = null;
 
     }
-
 
 
 
@@ -124,6 +116,19 @@ public class OrderService {
         }
     }
 
+    public List<PurchaseOrder> getSalesHistory() {
+
+        List<PurchaseOrder> salesHistory = orderRepository.findByStatusInCustom(StatusOrder.CONFIRM, StatusOrder.DELETE);
+
+
+//        salesHistory.add(orderRepository.findByStatus(StatusOrder.DELETE));
+        return salesHistory;
+//        return salesHistory;
+    }
+
+
+
+
 
 
 
@@ -137,12 +142,51 @@ public class OrderService {
         return orderRepository.findById(orderId).get();
     }
 
-
-    public void finishOrder(UUID orderId) {
-        PurchaseOrder record = orderRepository.findById(orderId).get();
-        record.setStatus(StatusOrder.FINISH);
-        orderRepository.save(record);
+    public List<OrderItem> getOrderItems(UUID orderId) {
+        PurchaseOrder order = orderRepository.findById(orderId).orElse(null);
+        if (order != null) {
+            return itemRepository.findByPurchaseOrder(order);
+        } else {
+            return Collections.emptyList();
+        }
     }
+
+    public PurchaseOrder getOrder(UUID orderId) {
+        return orderRepository.findById(orderId).orElse(null);
+    }
+
+    public void deleteOrder(UUID orderId) {
+        PurchaseOrder order = orderRepository.findById(orderId).orElse(null);
+        if (order != null) {
+            List<OrderItem> orderItems = itemRepository.findByPurchaseOrder(order);
+
+            for (OrderItem orderItem : orderItems) {
+                Product product = orderItem.getProduct();
+                int quantity = orderItem.getQuantity();
+
+                Product storedProduct = productRepository.findById(product.getId()).orElse(null);
+
+                if (storedProduct != null) {
+                    storedProduct.setStock(storedProduct.getStock() + quantity);
+                    productRepository.save(storedProduct);
+                }
+            }
+            order.setStatus(StatusOrder.DELETE);
+            orderRepository.save(order);
+
+//            orderRepository.delete(order);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
 
 }
 

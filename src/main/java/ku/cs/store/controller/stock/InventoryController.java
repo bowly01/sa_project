@@ -62,12 +62,14 @@ public class InventoryController {
                                     @ModelAttribute ProductRequest product,
                                     Authentication authentication) {
         String username = authentication.getName();
-        if(product.getStock() < 1){
+        if(product.getStock() < 1 || product.getStock() > product.getRequireProduct()){
             model.addAttribute("categories", categoryService.getAllCategories());
             model.addAttribute("products", productService.getAllProducts());
             model.addAttribute("productsIndex", productService.getOneById(id));
             model.addAttribute("units", unitService.getAllUnit());
             model.addAttribute("stockError", product.getStock() < 1 ? "กรุณากรอกจำนวนสินค้ามากกว่าเท่ากับ 1" : null);
+            model.addAttribute("stockErrorOver", product.getStock() > product.getRequireProduct() ? "จำนวนสินค้ามากเกินความต้องการกรุณาเพิ่มจำนวนความต้องการ" : null);
+
             return "stock/add";
         }
         model.addAttribute("categories", categoryService.getAllCategories());

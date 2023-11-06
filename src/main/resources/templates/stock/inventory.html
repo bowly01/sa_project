@@ -35,7 +35,6 @@
             <th>จำนวนต้องการ</th>
             <th>ราคา</th>
             <th>แก้ไข</th>
-            <th>ลบสินค้า</th>
         </tr>
         </thead>
         <tbody>
@@ -51,33 +50,6 @@
 
                 <td style="text-align: right" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 2, 'POINT')}"></td>
                 <td><a class="btn btn-primary" th:href="@{'/products/edit/' + ${product.id}}">Edit</a></td>
-                <td>
-                    <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="deleteConfirmationModalLabel">Delete Confirmation</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>คุณต้องการยืนยันการลบสินค้ารายการนี้หรือไม่?</p>
-                                    <input type="hidden" id="productToDeleteId" value="">
-                                </div>
-                                <div class="modal-footer">
-                                    <form th:action="@{'/products/delete/' + ${product.id}}" method="post">
-                                        <input type="hidden" name="_method" value="delete" />
-                                        <button type="submit" class="btn btn-danger">Delete</button>
-                                    </form>
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal">Delete</button>
-
-                </td>
 
             </tr>
         </th:block>
