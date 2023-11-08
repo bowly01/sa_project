@@ -24,6 +24,7 @@ import java.util.UUID;
 public class InventoryController {
     @Autowired
     private ProductService productService;
+
     @Autowired
     private CategoryService categoryService;
     @Autowired
@@ -34,7 +35,6 @@ public class InventoryController {
     public String getAllProduct(Model model,  @RequestParam(name = "page", defaultValue = "0") int page) {
         int pageSize = 5; // Number of products per page
         Page<Product> productPage = productService.findAll(PageRequest.of(page, pageSize));
-        model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("products", productPage.getContent());
         model.addAttribute("page", productPage);
 
@@ -62,13 +62,14 @@ public class InventoryController {
                                     @ModelAttribute ProductRequest product,
                                     Authentication authentication) {
         String username = authentication.getName();
-        if(product.getStock() < 1 || product.getStock() > product.getRequireProduct()){
+
+        if(product.getStock() < 1 ){
             model.addAttribute("categories", categoryService.getAllCategories());
             model.addAttribute("products", productService.getAllProducts());
             model.addAttribute("productsIndex", productService.getOneById(id));
             model.addAttribute("units", unitService.getAllUnit());
             model.addAttribute("stockError", product.getStock() < 1 ? "กรุณากรอกจำนวนสินค้ามากกว่าเท่ากับ 1" : null);
-            model.addAttribute("stockErrorOver", product.getStock() > product.getRequireProduct() ? "จำนวนสินค้ามากเกินความต้องการกรุณาเพิ่มจำนวนความต้องการ" : null);
+//            model.addAttribute("stockErrorOver", !productService.validAddStock(id,product.getStock(),product.getUnit().getId()) ? "จำนวนสินค้ามากเกินความต้องการกรุณาเพิ่มจำนวนความต้องการ" : null);
 
             return "stock/add";
         }
@@ -76,7 +77,7 @@ public class InventoryController {
         model.addAttribute("products", productService.getAllProducts());
         model.addAttribute("productsIndex", productService.getOneById(id));
         model.addAttribute("units", unitService.getAllUnit());
-        productService.addStock(id,product.getStock(),product.getUnitId(),username);
+        productService.addStock(id,product.getStock(),product.getUnitId(), username);
         return "redirect:/inventory";
     }
 }

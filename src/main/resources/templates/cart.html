@@ -59,36 +59,36 @@
 <!--            }-->
 <!--          });-->
 <!--        </script>-->
-          <form id="delete-form" method="post">
-              <button id="delete-button" type="submit" class="btn btn-danger"
-                      data-order-id="${order.id}" data-product-id="${item.product.id}">Delete</button>
-          </form>
-          <script type="text/javascript">
-              document.getElementById('delete-button').addEventListener('click', function (event) {
-                  event.preventDefault();
-                  if (confirm('คุณแน่ใจหรือไม่ที่ต้องการลบรายการสินค้านี้?')) {
-                      var orderId = this.getAttribute('data-order-id');
-                      var productId = this.getAttribute('data-product-id');
+<!--          <form id="delete-form" method="post">-->
+<!--              <button id="delete-button" type="submit" class="btn btn-danger"-->
+<!--                      data-order-id="${order.id}" data-product-id="${item.product.id}">Delete</button>-->
+<!--          </form>-->
+<!--          <script type="text/javascript">-->
+<!--              document.getElementById('delete-button').addEventListener('click', function (event) {-->
+<!--                  event.preventDefault();-->
+<!--                  if (confirm('คุณแน่ใจหรือไม่ที่ต้องการลบรายการสินค้านี้?')) {-->
+<!--                      var orderId = this.getAttribute('data-order-id');-->
+<!--                      var productId = this.getAttribute('data-product-id');-->
 
-                      fetch(`/orders/delete/${orderId}/${productId}`, {
-                          method: 'DELETE',
-                          headers: {
-                              'Content-Type': 'application/json',
-                          },
-                      })
-                          .then((response) => {
-                              if (response.ok) {
-                                  location.reload();
-                              } else {
-                                  alert('เกิดข้อผิดพลาดในการลบรายการสินค้า');
-                              }
-                          })
-                          .catch((error) => {
-                              console.error('เกิดข้อผิดพลาด: ' + error);
-                          });
-                  }
-              });
-          </script>
+<!--                      fetch(`/orders/delete/${orderId}/${productId}`, {-->
+<!--                          method: 'DELETE',-->
+<!--                          headers: {-->
+<!--                              'Content-Type': 'application/json',-->
+<!--                          },-->
+<!--                      })-->
+<!--                          .then((response) => {-->
+<!--                              if (response.ok) {-->
+<!--                                  location.reload();-->
+<!--                              } else {-->
+<!--                                  alert('เกิดข้อผิดพลาดในการลบรายการสินค้า');-->
+<!--                              }-->
+<!--                          })-->
+<!--                          .catch((error) => {-->
+<!--                              console.error('เกิดข้อผิดพลาด: ' + error);-->
+<!--                          });-->
+<!--                  }-->
+<!--              });-->
+<!--          </script>-->
 
 
 

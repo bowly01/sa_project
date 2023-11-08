@@ -93,7 +93,15 @@ public class ProductService {
             // You can throw an exception or handle it in some other way.
         }
     }
-
+    public Boolean validAddStock(UUID id,int amountToAdd,Long unitId){
+        Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
+//        Product record = modelMapper.map(productRequest,Product.class);
+        Unit unit = unitRepository.findById(unitId).get();
+        if(amountToAdd>product.getStock()+(amountToAdd*unit.getQuantity())){
+            return false;
+        }
+        return true;
+    }
     public void addStock(UUID productId, int amountToAdd, Long unitId,String username) {
         // Retrieve the product from the database
         Product product = productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product not found"));
