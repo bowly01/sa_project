@@ -29,11 +29,11 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
     //view index
-    @GetMapping("/{id}")
-    public String getOneProduct(@PathVariable UUID id, Model model) {
-        model.addAttribute("products", productService.getOneById(id));
-        return "products/index";
-    }
+//    @GetMapping("/{id}")
+//    public String getOneProduct(@PathVariable UUID id, Model model) {
+//        model.addAttribute("products", productService.getOneById(id));
+//        return "products/index";
+//    }
 
 
     @GetMapping("/edit/{id}")

@@ -98,7 +98,7 @@
             <div class="mb-3">
               <label for="inputQuantity">กำหนดจำนวนต่อหน่วย</label>
               <input id="inputQuantity" type="number" class="form-control"
-                     name="quantity" th:value="${unitIndex.quantity}" th:min="1" th:max="100000" onchange="checkQuantity()"autocomplete="off" pattern="[0-9]" required>
+                     name="quantity" th:value="${unitIndex.quantity}" th:min="1" th:max="1000000" onchange="checkQuantity()"autocomplete="off" pattern="[0-9]" required>
 <!--              <div id="quantity-error-msg" class="alert alert-danger"-->
 <!--                   th:if="${quantityError}">-->
 <!--                <span th:text="${quantityError}"></span>-->
