@@ -1,9 +1,6 @@
 package ku.cs.store.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import ku.cs.store.common.StatusOrder;
 import lombok.Data;
 
@@ -33,6 +30,8 @@ public class PurchaseOrder {
             total += item.getSubtotal();
         return total;
     }
+    @ManyToOne
+    private Member member;
 
     public StatusOrder getStatus() {
         return status;
@@ -41,5 +40,6 @@ public class PurchaseOrder {
     public void setStatus(StatusOrder status) {
         this.status = status;
     }
+
 
 }

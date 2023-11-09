@@ -22,7 +22,7 @@ public class HomeController {
     @RequestMapping("/")
     public String getHomePage(Model model) {
         model.addAttribute("categories", categoryService.getAllCategories());
-        model.addAttribute("products", productService.getAllProducts());
+        model.addAttribute("products", productService.getAvailableProducts());
 
         // ต้องคืนค่าเป็นชื่อไฟล์ html template โดยในเมธอดนี้ คืนค่าเป็น home.html
         return "home";

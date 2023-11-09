@@ -88,7 +88,7 @@
                             <div class="col-xl-6"><h1 class="">เพิ่มหน่วย</h1></div>
                         </div>
 
-                    <form action="#" th:action="@{/unit/add}" method="POST">
+                    <form action="#" th:action="@{/unit/add}" method="POST" onsubmit="return confirmSave();">
                         <div class="mb-3">
                             <label for="inputName">ชื่อหน่วยสินค้า</label>
                             <input id="inputName" type="input" class="form-control"
@@ -101,11 +101,11 @@
                         <div class="mb-3">
                             <label for="inputQuantity">กำหนดจำนวนต่อหน่วย</label>
                             <input id="inputQuantity" type="number" class="form-control"
-                                   name="quantity" required>
-                            <div id="quantity-error-msg" class="alert alert-danger"
-                                 th:if="${quantityError}">
-                                <span th:text="${quantityError}"></span>
-                            </div>
+                                   name="quantity" pattern="[0-9]"th:min="1" th:max="100000" onchange="checkQuantity()" autocomplete="off" required>
+<!--                            <div id="quantity-error-msg" class="alert alert-danger"-->
+<!--                                 th:if="${quantityError}">-->
+<!--                                <span th:text="${quantityError}"></span>-->
+<!--                            </div>-->
                         </div>
                         <div class="row" style="padding-bottom: 10px">
                             <div class="col-xl-5"></div>
@@ -182,6 +182,18 @@
 
 
 <!--</script>-->
+<script>
+    function confirmSave() {
+        return confirm("คุณแน่ใจหรือไม่ที่ต้องการบันทึกข้อมูล?");
+    }
+    function checkQuantity() {
+        var quantity = document.getElementById("inputStock").value;
+
+        if (quantity > 1000000) {
+            alert("จำนวนสินค้าเกิน 1000000 ชิ้น");
+        }
+    }
+</script>
 
 </body>
 </html>

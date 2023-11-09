@@ -2,60 +2,53 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
-  <meta charset="UTF-8">
-  <title>Store Web Application</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <title>Store Web Application</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </head>
 
 <body>
 <div th:insert="~{fragments/header :: header}"></div>
 
 <div class="container">
-  <h1>History Product</h1>
+    <h1>ประวัติสินค้า</h1>
     <!-- Add the dropdown and table to your HTML -->
     <div class="mb-3">
         <label for="operationTypeFilter">Filter by Operation Type:</label>
-        <select id="operationTypeFilter" class="form-control">
+        <select id="operationTypeFilter" class="form-control" onchange="filterHistory()">
             <option value="ALL">Show All</option>
             <option value="CREATE">Create</option>
-            <option value="ADD">Add</option>
-            <option value="EDIT">Edit</option>
-            <option value="DELETE">Delete</option>
+            <option value="INCREASE">Add</option>
+            <option value="UPDATE">Edit</option>
+            <option value="UNAVAILABLE">Delete</option>
             <!-- Add other operation types as needed -->
         </select>
     </div>
 
-    <table id="historyTable" class="table table-bordered table-striped table-hover">
-    <thead class="thead-dark">
-    <tr>
-<!--      <th>ลำดับ</th>-->
-      <th>ชื่อสินค้า</th>
-      <th>สถานะ</th>
-      <th>รายละเอียด</th>
-      <th>เวลา</th>
-      <th>ผู้ทำ</th>
-    </tr>
-    </thead>
-    <tbody>
-    <th:block th:if="${histories != null}">
 
-      <tr th:each="history : ${histories}" th:if="${operationType == null or operationType == '' or history.operationType == operationType}">
-<!--&lt;!&ndash;        <td th:text="${history.getId}"></td>&ndash;&gt;-->
-<!--        <td th:text="${history.getProductName()}"></td>-->
-<!--        <td th:text="${history.getOperationType()}"></td>-->
-<!--        <td th:text="${history.getDetail()}"></td>-->
-<!--        <td th:text="${history.getTimestamp()}"></td>-->
-<!--        <td th:text="${history.getUser()}"></td>-->
-      </tr>
-    </th:block>
-    </tbody>
-  </table>
+    <table id="historyTable" class="table table-bordered table-striped table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <th>ชื่อสินค้า</th>
+            <th>สถานะ</th>
+            <th>รายละเอียด</th>
+            <th>เวลา</th>
+            <th>ผู้ทำ</th>
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:if="${histories != null}">
+
+            <tr th:each="history : ${histories}" th:if="${operationType == null or operationType == '' or history.operationType == operationType}">
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
 </div>
 
-</body>
 <script>
-    document.getElementById("operationTypeFilter").addEventListener("change", function() {
+    document.addEventListener("DOMContentLoaded", function() {
         filterHistory();
     });
 
@@ -66,17 +59,12 @@
     }
 
     function updateTable(operationType) {
-        // You can make an Ajax request to the server to get filtered records
         fetch('/getHistories?operationType=' + operationType)
             .then(response => response.json())
             .then(data => {
-                // Get a reference to the table body
                 var tableBody = document.getElementById("historyTable").getElementsByTagName('tbody')[0];
-
-                // Clear the current table rows
                 tableBody.innerHTML = '';
 
-                // Iterate over the filtered history records and create table rows
                 data.forEach(function(history) {
                     var row = tableBody.insertRow(tableBody.rows.length);
                     var cell1 = row.insertCell(0);
@@ -85,7 +73,7 @@
                     var cell4 = row.insertCell(3);
                     var cell5 = row.insertCell(4);
 
-                    cell1.innerHTML = history.productName;
+                    cell1.innerHTML = history.productName; // Assuming you have a property like this in your JSON response
                     cell2.innerHTML = history.operationType;
                     cell3.innerHTML = history.detail;
                     cell4.innerHTML = history.timestamp;
@@ -96,5 +84,12 @@
                 console.error('Error:', error);
             });
     }
+
+
+    document.getElementById("operationTypeFilter").addEventListener("change", function() {
+        filterHistory();
+    });
 </script>
+
+</body>
 </html>

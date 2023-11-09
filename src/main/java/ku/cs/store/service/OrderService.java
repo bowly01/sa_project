@@ -1,15 +1,15 @@
 package ku.cs.store.service;
 
 import ku.cs.store.common.StatusOrder;
-import ku.cs.store.entity.OrderItem;
-import ku.cs.store.entity.OrderItemKey;
-import ku.cs.store.entity.Product;
-import ku.cs.store.entity.PurchaseOrder;
+import ku.cs.store.entity.*;
 import ku.cs.store.model.AddCartRequest;
+import ku.cs.store.repository.MemberRepository;
 import ku.cs.store.repository.OrderItemRepository;
 import ku.cs.store.repository.ProductRepository;
 import ku.cs.store.repository.PurchaseOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,7 +23,8 @@ public class OrderService {
     @Autowired
     private PurchaseOrderRepository orderRepository;
 
-
+    @Autowired
+    private MemberRepository memberRepository;
     @Autowired
     private OrderItemRepository itemRepository;
 
@@ -124,12 +125,15 @@ public class OrderService {
 
 
     public void createNewOrder() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        Member member = memberRepository.findByUsername(username);
         PurchaseOrder newOrder = new PurchaseOrder();
         newOrder.setStatus(StatusOrder.ORDER);
+        newOrder.setMember(member);
         PurchaseOrder record = orderRepository.save(newOrder);
         currentOrderId = record.getId();
     }
-
     public void order(UUID productId, AddCartRequest request) {
         if (currentOrderId == null)
             createNewOrder();

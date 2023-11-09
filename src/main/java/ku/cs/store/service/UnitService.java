@@ -43,13 +43,11 @@ public class UnitService {
         unitRepository.deleteById(unitId);
     }
     public void editUnit(Long id,Unit updateUnit){
-        Unit existingUnit = unitRepository.findById(id).orElseThrow();
-        if(!updateUnit.getName().equals(existingUnit.getName())){
-            existingUnit.setName(updateUnit.getName());
-            existingUnit.setQuantity(updateUnit.getQuantity());
-
-        }
-        unitRepository.save(existingUnit);
+        Unit record = modelMapper.map(updateUnit, Unit.class);
+        record.setId(id);
+        record.setName(updateUnit.getName());
+        record.setQuantity(updateUnit.getQuantity());
+        unitRepository.save(record);
     }
     public boolean unitNameIsExisted(Unit unit) {
         Optional<Unit> existingUnit = unitRepository.findByName(unit.getName());

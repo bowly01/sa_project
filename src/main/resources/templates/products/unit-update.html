@@ -98,11 +98,11 @@
             <div class="mb-3">
               <label for="inputQuantity">กำหนดจำนวนต่อหน่วย</label>
               <input id="inputQuantity" type="number" class="form-control"
-                     name="quantity" th:value="${unitIndex.quantity}" required>
-              <div id="quantity-error-msg" class="alert alert-danger"
-                   th:if="${quantityError}">
-                <span th:text="${quantityError}"></span>
-              </div>
+                     name="quantity" th:value="${unitIndex.quantity}" th:min="1" th:max="100000" onchange="checkQuantity()"autocomplete="off" pattern="[0-9]" required>
+<!--              <div id="quantity-error-msg" class="alert alert-danger"-->
+<!--                   th:if="${quantityError}">-->
+<!--                <span th:text="${quantityError}"></span>-->
+<!--              </div>-->
             </div>
             <div class="row" style="padding-bottom: 10px">
               <div class="col-xl-5"></div>
@@ -113,7 +113,7 @@
             </div>
           </form>
           <div>
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal">Delete</button>
+<!--            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal">Delete</button>-->
           </div>
         </div>
 
@@ -185,7 +185,13 @@
   function confirmSave() {
     return confirm("คุณแน่ใจหรือไม่ที่ต้องการบันทึกข้อมูล?");
   }
+    function checkQuantity() {
+    var quantity = document.getElementById("inputStock").value;
 
+    if (quantity > 1000000) {
+    alert("จำนวนสินค้าเกิน 1000000 ชิ้น");
+  }
+  }
 </script>
 
 </body>

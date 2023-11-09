@@ -34,9 +34,10 @@ public class UnitController {
     }
     @PostMapping("/edit/{id}")
     public String editUnit(@PathVariable("id") Long id, @ModelAttribute Unit updateUnit, Model model){
-        if (unitService.unitNameIsExisted(updateUnit)||updateUnit.getQuantity() < 1 ) {
-            model.addAttribute("nameError",unitService.unitNameIsExisted(updateUnit)?"มีหน่วยสินค้าชื่อนี้แล้ว":null);
-            model.addAttribute("quantityError", updateUnit.getQuantity() < 1 ? "กรุณากรอกจำนวนสินค้ามากกว่าเท่ากับ 1" : null);
+
+        // Check if the unit name already exists
+        if (unitService.unitNameIsExisted(updateUnit)) {
+            model.addAttribute("nameError", "มีหน่วยสินค้าชื่อนี้แล้ว");
             model.addAttribute("units", unitService.getAllUnit());
             return "products/unit-update"; // Return to the form page with error messages
         }
@@ -44,25 +45,19 @@ public class UnitController {
         unitService.editUnit(id,updateUnit);
         return "products/unit-custom";
     }
-//    @PostMapping("/delete/{id}")
-//    public String deleteUnit(@PathVariable Long id,@ModelAttribute  Unit unit,Model model){
-//        model.addAttribute("units",unitService.getAllUnit());
-//        unitService.deleteUnitById(id);
+//    @PostMapping("/delete/{unitId}")
+//    public String deleteCategory(@PathVariable Long unitId,
+//                                 Model model) {
+//        model.addAttribute("units", unitService.getAllUnit());
+//        if (productRepository.existsByUnitId(unitId)) {
+//            model.addAttribute("units", unitService.getAllUnit());
+//            model.addAttribute("deleteC", "มีสินค้าที่อ้างอิงถึงประเภทนี้ ไม่สามารถลบ");
+//            return "products/unit-custom";
+//        }
+//        unitService.deleteUnitById(unitId);
+//        System.out.print("ควรลบแล้ว");
 //        return "redirect:/unit";
 //    }
-    @PostMapping("/delete/{unitId}")
-    public String deleteCategory(@PathVariable Long unitId,
-                                 Model model) {
-        model.addAttribute("units", unitService.getAllUnit());
-        if (productRepository.existsByUnitId(unitId)) {
-            model.addAttribute("units", unitService.getAllUnit());
-            model.addAttribute("deleteC", "มีสินค้าที่อ้างอิงถึงประเภทนี้ ไม่สามารถลบ");
-            return "products/unit-custom";
-        }
-        unitService.deleteUnitById(unitId);
-        System.out.print("ควรลบแล้ว");
-        return "redirect:/unit";
-    }
 
     @PostMapping("/add")
     public String createUnit(@ModelAttribute Unit updateUnit,Model model){

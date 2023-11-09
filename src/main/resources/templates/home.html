@@ -10,7 +10,10 @@
 </head>
 <body>
 <div th:insert="~{fragments/header :: header}"></div>
+<div id="success" class="alert alert-danger"
+     th:if="${errorMessage}"  th:text="${errorMessage}">
 
+</div>
 <div class="container">
     <!-- Search Bar -->
     <div class="input-group mb-3">
@@ -20,14 +23,15 @@
         </div>
     </div>
 <!--table-bordered table-striped table-hover-->
-    <table th:each="category : ${categories}" class="table table-bordered table-striped table-hover">
+    <table class="table table-bordered table-striped table-hover">
         <thead class="thead-dark">
         <tr class="table-dark">
-            <td colspan="5"><span th:text="${category.categoryName}"></span></td>
+            <td colspan="6">สินค้าทั้งหมด</td>
         </tr>
         </thead>
         <tr>
             <th>ชื่อสินค้า</th>
+            <th>ประเภทสินค้า</th>
             <th>จำนวนคงคลังต่อหน่วย</th>
             <th>ราคาสินค้าต่อหน่วย</th>
             <th>เพิ่มเข้าสต็อค</th>
@@ -35,8 +39,9 @@
         </tr>
         <tbody>
         <th:block th:if="${products != null}">
-            <tr th:each="product : ${category.products}">
+            <tr th:each="product : ${products}">
                 <td th:text="${product.name}"></td>
+                <td th:text="${product.getCategory().categoryName}"></td>
                 <td th:class="${product.stock < product.requireProduct*0.2} ? 'text-bg-danger' : ''" th:text="${product.stock}"></td>
                 <td style="text-align: right" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 2, 'POINT')}"></td>
                 <td>
@@ -46,57 +51,17 @@
                     <form action="#" th:action="@{/orders/{productId}(productId=${product.id})}" method="POST">
                         <div class="mb-1" style="display: inline-block">
                             <label for="inputQuantity">Quantity</label>
-                            <input id="inputQuantity" type="input" class="form-control"
-                                   name="quantity">
+                            <input id="inputQuantity" type="number" class="form-control"
+                                   name="quantity"
+                                   th:min="1" th:max="10000"th:value="1" autocomplete="off" required>
                         </div>
                         <button id="submit-button" type="submit" class="btn btn-primary" >Add to Cart</button>
                     </form>
-<!--                    <form th:action="@{/orders/{productId}(productId=${product.id})}" method="post" onsubmit="return validateForm();">-->
-<!--                        <input type="number" id="quantity" name="quantity" min="0" required>-->
-<!--                        <button type="submit" class="btn btn-primary">Add to Cart</button>-->
-<!--                    </form>-->
                 </td>
             </tr>
         </th:block>
         </tbody>
-
     </table>
-
-<!--    <script type="text/javascript">-->
-<!--        var firstZeroEntry = true;-->
-<!--        var hasChanged = false;-->
-
-<!--        function validateForm() {-->
-<!--            var quantity = document.getElementById('quantity').value;-->
-
-<!--            if (isNaN(quantity)) {-->
-<!--                alert('กรุณากรอกจำนวนสินค้าที่เป็นตัวเลข');-->
-<!--                return false;-->
-<!--            }-->
-
-<!--            if (quantity == 0) {-->
-<!--                if (firstZeroEntry) {-->
-<!--                    firstZeroEntry = false;-->
-<!--                    alert('ไม่สามารถกรอกค่า 0 ครั้งแรก');-->
-<!--                    return false;-->
-<!--                } else {-->
-<!--                    // กรอกค่า 0 ครั้งที่ 2 และต่อไป-->
-<!--                    // คุณสามารถทำการลบรายการสินค้าในตะกร้าสินค้าที่มีอยู่-->
-<!--                    // และนำคุณไปยังหน้า Cart-->
-<!--                    alert('รายการสินค้าถูกลบออกจากตะกร้าสินค้า');-->
-<!--                    // เปลี่ยนไปยังหน้า Cart-->
-<!--                    window.location.href = '/cart';-->
-<!--                    return false;-->
-<!--                }-->
-<!--            }-->
-
-<!--            // ไม่มีปัญหา สำหรับค่าที่มากกว่า 0-->
-<!--            return true;-->
-<!--        }-->
-<!--    </script>-->
-
-
-
 
 
 

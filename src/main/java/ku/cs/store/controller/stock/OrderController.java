@@ -3,6 +3,7 @@ package ku.cs.store.controller.stock;
 import ku.cs.store.model.AddCartRequest;
 import ku.cs.store.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ku.cs.store.entity.PurchaseOrder;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.UUID;
 
@@ -35,23 +37,25 @@ public class OrderController {
 
 
     @PostMapping
-    public String submitOrder(Model model) {
+    public String submitOrder(Model model,Authentication authentication) {
+        String username = authentication.getName();
         orderService.submitOrder();
         model.addAttribute("confirmOrder", true);
+        model.addAttribute("username","username");
         return "redirect:/";
     }
 
 
     @PostMapping("/{productId}")
     public String order(@PathVariable UUID productId,
-                        @ModelAttribute AddCartRequest request, Model model) {
+                        @ModelAttribute AddCartRequest request, Model model,     RedirectAttributes redirectAttributes) {
         try {
             orderService.order(productId, request);
             return "redirect:/orders";
         } catch (RuntimeException e) {
-            String errorMessage = "ไม่สามารถเพิ่มสินค้าลงตะกร้าได้"; // ข้อความข้อผิดพลาด
-            model.addAttribute("errorMessage", errorMessage);
-            return "redirect:/"; // กลับไปที่หน้าหลัก
+//            String errorMessage = "ไม่สามารถเพิ่มสินค้าลงตะกร้าได้"; // ข้อความข้อผิดพลาด
+            redirectAttributes.addFlashAttribute("errorMessage", "ไม่สามารถเพิ่มสินค้าลงตะกร้าได้");
+            return "redirect:/" ;// กลับไปที่หน้าหลัก
         }
     }
 

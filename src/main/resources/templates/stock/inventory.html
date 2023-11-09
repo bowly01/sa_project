@@ -29,8 +29,9 @@
         <thead class="thead-dark">
         <tr>
             <th>ชื่อสินค้า</th>
-            <th>image</th>
-            <th>รายละเอืยดสินค้า</th>
+            <th>รูปภาพ</th>
+            <th>ประเภทสินค้า</th>
+            <th>รายละเอียดสินค้า</th>
             <th>จำนวนคงคลัง</th>
             <th>จำนวนต้องการ</th>
             <th>ราคา</th>
@@ -44,6 +45,7 @@
                 <td th:text="${product.name}"></td>
                 <!-- Assuming your product object contains the Base64-encoded image -->
                 <td><img th:src="'data:image/jpeg;base64,' + ${product.imageFile}" alt="Image Description" style="width: 100px;height: 100px;"></td>
+                <td th:text="${product.getCategory().categoryName}"></td>
                 <td th:text="${product.getDetail()}"></td>
                 <td th:text="${product.getStock}"></td>
                 <td th:text="${product.requireProduct}"></td>

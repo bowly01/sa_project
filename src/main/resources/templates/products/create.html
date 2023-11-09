@@ -55,13 +55,13 @@
           <div class="mb-3">
             <label for="inputName">ชื่อสินค้า</label>
             <input id="inputName" type="text" class="form-control" th:field="*{name}" required>
-            <div id="error-msg" class="alert alert-danger" th:if="${nameError}"><span th:text="${nameError}"></span></div>
+<!--            <div id="error-msg" class="alert alert-danger" th:if="${nameError}"><span th:text="${nameError}"></span></div>-->
             <div class="alert alert-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
           </div>
           <div class="mb-3">
             <label for="inputDetail">รายละเอียดสินค้า</label>
             <input id="inputDetail" type="text" class="form-control" th:field="*{detail}" required>
-            <div class="alert alert-danger" th:if="${#fields.hasErrors('detail')}" th:errors="*{detail}"></div>
+<!--            <div class="alert alert-danger" th:if="${#fields.hasErrors('detail')}" th:errors="*{detail}"></div>-->
           </div>
           <div class="mb-3">
             <label for="inputCategory">ประเภทสินค้า</label>
@@ -73,19 +73,21 @@
           </div>
           <div class="mb-3">
             <label for="inputPrice">ราคาสินค้า</label>
-            <input id="inputPrice" type="number" class="form-control" name="price" required>
-            <div id="priceError" class="alert alert-danger" th:if="${priceError != null}"><span th:text="${priceError}"></span></div>
+            <input id="inputPrice" type="number" class="form-control" th:min="1" th:max="100000" name="price" onchange="checkPrice()" pattern="[0-9]" autocomplete="off" required>
+<!--            <div id="priceError" class="alert alert-danger" th:if="${priceError != null}"><span th:text="${priceError}"></span></div>-->
           </div>
           <div class="mb-3">
             <label for="inputRequire">จำนวนสินค้าที่ต้องการ</label>
-            <input id="inputRequire" type="number" class="form-control" name="requireProduct" required>
-            <div id="requireError" class="alert alert-danger" th:if="${requireError != null}"><span th:text="${requireError}"></span></div>
+            <input id="inputRequire" type="number" class="form-control"  th:min="1" th:max="100000" name="requireProduct" onchange="checkRequire()" pattern="[0-9]" autocomplete="off" required>
+<!--            <div id="requireError" class="alert alert-danger" th:if="${requireError != null}"><span th:text="${requireError}"></span></div>-->
           </div>
           <div class="mb-3">
             <label for="inputStock">จำนวนสินค้า</label>
-            <input id="inputStock" type="number" class="form-control" name="stock" required>
-            <div id="stockOverError" class="alert alert-danger" th:if="${stockOverError != null}"><span th:text="${stockOverError}"></span></div>
-            <div id="stockError" class="alert alert-danger" th:if="${stockError != null}"><span th:text="${stockError}"></span></div>
+            <input id="inputStock" type="number" class="form-control" th:min="1" th:max="100000" name="stock" onchange="checkQuantity()" pattern="[0-9]" autocomplete="off" required>
+<!--            <div id="stockOverError" class="alert alert-danger" th:if="${stockOverError != null}"><span th:text="${stockOverError}"></span></div>-->
+<!--            <div id="stockError" class="alert alert-danger" th:if="${stockError != null}"><span th:text="${stockError}"></span></div>-->
+<!--            <div id="stockErrorOver" class="alert alert-danger" th:if="${stockErrorOver != null}"><span th:text="${stockErrorOver}"></span></div>-->
+
           </div>
 
           <div class="mb-3">
@@ -115,5 +117,28 @@
 
 
 </div>
+<script>
+  function checkQuantity() {
+    var quantity = document.getElementById("inputStock").value;
+
+    if (quantity > 1000000) {
+      alert("จำนวนสินค้าเกิน 1000000 ชิ้น");
+    }
+  }
+  function checkRequire() {
+    var quantity = document.getElementById("inputRequire").value;
+
+    if (quantity > 1000000) {
+      alert("จำนวนสินค้าเกิน 1000000 ชิ้น");
+    }
+  }
+  function checkPrice() {
+    var quantity = document.getElementById("inputPrice").value;
+
+    if (quantity > 1000000) {
+      alert("ราคาเกิน 1000000 บาท");
+    }
+  }
+</script>
 </body>
 </html>

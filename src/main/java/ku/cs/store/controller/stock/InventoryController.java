@@ -52,7 +52,7 @@ public class InventoryController {
     public String getProductToAdd(@PathVariable UUID id, Model model) {
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("units", unitService.getAllUnit());
-        model.addAttribute("products", productService.getAllProducts());
+        model.addAttribute("products", productService.getAvailableProducts());
         model.addAttribute("productsIndex", productService.getOneById(id));
 
         return "stock/add";
@@ -65,7 +65,7 @@ public class InventoryController {
 
         if(product.getStock() < 1 ){
             model.addAttribute("categories", categoryService.getAllCategories());
-            model.addAttribute("products", productService.getAllProducts());
+            model.addAttribute("products", productService.getAvailableProducts());
             model.addAttribute("productsIndex", productService.getOneById(id));
             model.addAttribute("units", unitService.getAllUnit());
             model.addAttribute("stockError", product.getStock() < 1 ? "กรุณากรอกจำนวนสินค้ามากกว่าเท่ากับ 1" : null);
@@ -74,7 +74,7 @@ public class InventoryController {
             return "stock/add";
         }
         model.addAttribute("categories", categoryService.getAllCategories());
-        model.addAttribute("products", productService.getAllProducts());
+        model.addAttribute("products", productService.getAvailableProducts());
         model.addAttribute("productsIndex", productService.getOneById(id));
         model.addAttribute("units", unitService.getAllUnit());
         productService.addStock(id,product.getStock(),product.getUnitId(), username);

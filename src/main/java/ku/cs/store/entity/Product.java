@@ -3,6 +3,7 @@ package ku.cs.store.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import ku.cs.store.common.StatusProduct;
 import lombok.Data;
 
 import java.util.Date;
@@ -27,14 +28,7 @@ public class Product {
     private int stock;
     @Min(value = 1,message = "กรุณากรอกเลขมากกว่าเท่ากับ 1")
     private int requireProduct;
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDateTime;
 
-    @Temporal(TemporalType.DATE)
-    private Date dateStock;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastModifiedDateTime;
     @ManyToOne
     private Unit unit;
     @ManyToOne
@@ -42,5 +36,9 @@ public class Product {
     @Lob
     @Column(columnDefinition = "MEDIUMBLOB")
     private String  imageFile;
+    private StatusProduct statusProduct;
+
+    @ManyToOne
+    private PurchaseOrder purchaseOrder;
 
  }

@@ -42,7 +42,7 @@
         <div class="col-xl-6 " style="padding-left: 3%;padding-right: 3%; padding-top: 5%; padding-bottom: 10%">
             <div class="card" style=" border-radius: 33px;height: 100%;width: 100%;padding-left: 10%;padding-top: 5%;padding-right: 5%">
 
-            <form th:object="${productsIndex}" action="#" th:action="@{/inventory/add/{id}(id=${id},final='productsIndex.id')}" method="POST">
+            <form th:object="${productsIndex}" action="#" th:action="@{/inventory/add/{id}(id=${id},final='productsIndex.id')}" method="POST" onsubmit="return confirmSave();">
                 <div class="mb-3">
                     <div class="d-inline-flex">
                         <p>ชื่อสินค้า:&nbsp;&nbsp;&nbsp;&nbsp;</p><p th:text="${productsIndex.name}"></p>
@@ -59,7 +59,7 @@
                     </div><br>
 
                     <div class="d-xl-inline">
-                        <input id="inputQuantity" type="number" class="form-control d-xl-inline" name="stock" placeholder="จำนวนสินค้า" style="width: 40%" required>
+                        <input id="inputQuantity" type="number" class="form-control d-xl-inline" name="stock" placeholder="จำนวนสินค้า" style="width: 40%" th:min="1" th:max="100000" onchange="checkQuantity()"autocomplete="off" pattern="[0-9]" required>
 
                         <select class="form-control d-xl-inline" style="width: 40%" id="inputUnit" name="unitId" placeholder="หน่วย">
                             <option th:each="unit : ${units}" th:value="${unit.id}" th:text="${unit.name + ' (' + unit.quantity + ') จำนวนต่อหน่วย'}"></option>
@@ -98,4 +98,16 @@
 
 
 </body>
+<script>
+    function confirmSave() {
+        return confirm("คุณแน่ใจหรือไม่ที่ต้องการบันทึกข้อมูล?");
+    }
+    function checkQuantity() {
+        var quantity = document.getElementById("inputStock").value;
+
+        if (quantity > 1000000) {
+            alert("จำนวนสินค้าเกิน 1000000 ชิ้น");
+        }
+    }
+</script>
 </html>

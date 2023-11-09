@@ -64,7 +64,7 @@
             <div class="col-xl-6"><h4>เพิ่มประเภทสินค้า</h4></div>
           </div>
 
-          <form action="#" th:action="@{/categories/add}" method="POST">
+          <form action="#" th:action="@{/categories/add}" method="POST" onsubmit="return confirmSave();">
             <div class="mb-3">
               <label for="inputName">ชื่อประเภทสินค้า</label>
               <input id="inputName" type="input" class="form-control"
@@ -109,7 +109,9 @@
         integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/"
         crossorigin="anonymous"></script>
 <script>
-
+  function confirmSave() {
+    return confirm("คุณแน่ใจหรือไม่ที่ต้องการบันทึกข้อมูล?");
+  }
 </script>
 </body>
 </html>

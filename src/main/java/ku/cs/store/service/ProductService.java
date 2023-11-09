@@ -1,5 +1,8 @@
 package ku.cs.store.service;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import ku.cs.store.common.StatusProduct;
 import ku.cs.store.entity.*;
 import ku.cs.store.model.ProductRequest;
 import ku.cs.store.repository.CategoryRepository;
@@ -11,19 +14,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
 
 @Service
+
 public class ProductService {
     @Autowired
     private ProductRepository productRepository;
     @Autowired
+    private ProductLogService productLogService;
+    @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
     private UnitRepository unitRepository;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     private ProductLogRepository productLogRepository;
@@ -32,16 +41,15 @@ public class ProductService {
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
+    public List<Product> getAvailableProducts(){return productRepository.findByStatusProduct(StatusProduct.AVAILABLE);}
 
     public Product getOneById(UUID id) {
         return productRepository.findById(id).get();
     }
-
+    @Transactional
     public void createProduct(ProductRequest product, MultipartFile file,String username) {
         Product record = modelMapper.map(product, Product.class);
-        record.setCreatedDateTime(new Date());
-        record.setLastModifiedDateTime(new Date());
-        record.setDateStock(new Date());
+        record.setStatusProduct(StatusProduct.AVAILABLE);
         Category category = categoryRepository.findById(product.getCategoryId()).get();
         Unit unit = unitRepository.findById(product.getUnitId()).get();
         record.setStock(product.getStock());
@@ -56,41 +64,25 @@ public class ProductService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        // Save the product
-        productRepository.save(record);
-        // Save History
-        ProductLog history = new ProductLog();
-        history.setProductId(record.getId());
-        history.setProductName(record.getName());
-        history.setOperationType("CREATE");
-        history.setDetail("สร้างสินค้าใหม่");
-        history.setUser(username);
-        history.setTimestamp(new Date());
-        productLogRepository.save(history);
-
+        // Reattach the Product entity to the current Hibernate session
+        Product attachedProduct = entityManager.merge(record);
+        //เก็บประวัติ
+        productLogService.logCreation(attachedProduct, "สร้างสินค้าใหม่ชื่อ"+attachedProduct.getName(), username);
 
 
     }
-    public void deleteProductById(UUID productId,String username){
-        Optional<Product> productOptional = productRepository.findById(productId);
+    @Transactional
+    public void updateProductStatus(UUID productId, String username) {
+        Optional<Product> optionalProduct = productRepository.findById(productId);
 
-        if (productOptional.isPresent()) {
-            Product product = productOptional.get();
-            productRepository.delete(product);
-
-            // Save History
-            ProductLog history = new ProductLog();
-            history.setProductId(product.getId());
-            history.setProductName(product.getName());
-            history.setOperationType("DELETE");
-            history.setDetail("ลบสินค้าชิ้นนี้");
-            history.setUser(username);
-            history.setTimestamp(new Date());
-            productLogRepository.save(history);
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            product.setStatusProduct(StatusProduct.UNAVAILABLE);
+            productRepository.save(product);
+            productLogService.logUnavailable(product, "เปลี่ยนสถานะสินค้าชื่อ"+product.getName(), username);
         } else {
-            // Handle the case where the product with the given ID doesn't exist
-            // You can throw an exception or handle it in some other way.
+            // Handle the case where the product with the given id is not found
+            throw new RuntimeException("Product not found with id: " + productId);
         }
     }
     public Boolean validAddStock(UUID id,int amountToAdd,Long unitId){
@@ -111,74 +103,79 @@ public class ProductService {
         int total=amountToAdd*quantityPerUnit;
         int newStock = product.getStock() + total;
         product.setStock(newStock);
-        product.setDateStock(new Date());
         product.setUnit(unit);
 
         // Save the updated product back to the database
         productRepository.save(product);
         // Save History
-        ProductLog history = new ProductLog();
-        history.setProductId(product.getId());
-        history.setProductName(product.getName());
-        history.setOperationType("ADD");
-        history.setDetail("เพิ่มสินค้าจำนวน"+total+"ชิ้น");
-        history.setUser(username);
-        history.setTimestamp(new Date());
-        productLogRepository.save(history);
+        productLogService.logIncrease(product, "เพิ่มสินค้าจำนวน " + product.getStock()+"ชิ้น", username);
     }
 
-    public void updateProduct(ProductRequest updatedProduct, MultipartFile imageFile,UUID id,String username) {
-        Product existingProduct = productRepository.findById(id).orElseThrow();
-        existingProduct.setId(id);
-        String test = "";
-        if(!updatedProduct.getName().equals(existingProduct.getName())){
-            existingProduct.setName(updatedProduct.getName());
-            test+= "แก้ชื่อเป็น: "+updatedProduct.getName()+" ,";
-        }
-        if(!updatedProduct.getDetail().equals(existingProduct.getDetail())){
-            existingProduct.setDetail(updatedProduct.getDetail());
-            test+= "แก้รายละเอียดเป็น: "+updatedProduct.getDetail()+" ,";
-        }
-        if(updatedProduct.getStock()!=(existingProduct.getStock())){
-            test+= "แก้จำนวนสินค้าในคลังเป็น: "+updatedProduct.getStock()+" ,";
-        }
-        if(updatedProduct.getPrice()!=(existingProduct.getPrice())){
-            existingProduct.setPrice(updatedProduct.getPrice());
-            test+= "แก้ราคาเป็น: "+updatedProduct.getPrice()+" ,";
-        }
-        if(updatedProduct.getRequireProduct()!=(existingProduct.getRequireProduct())){
-            test+= "แก้จำนวนสินค้าที่ต้องการเป็น: "+updatedProduct.getRequireProduct()+" ,";
-        }
-        Category category = categoryRepository.findById(updatedProduct.getCategoryId()).get();
-        existingProduct.setLastModifiedDateTime(new Date());
-        existingProduct.setStock(updatedProduct.getStock());
-        existingProduct.setRequireProduct(updatedProduct.getRequireProduct());
-        if(!imageFile.isEmpty()) {
-            try {
-                byte[] imageBytes = imageFile.getBytes();
-                String base64Image = Base64.getEncoder().encodeToString(imageBytes);
-                existingProduct.setImageFile(base64Image);
-                test+="แก้ไขรูปภาพ";
-            } catch (IOException e) {
-                e.printStackTrace();
-        }
+    public void editProduct(ProductRequest request, MultipartFile file, UUID id, String username) {
+        // Retrieve the existing product from the database
+        Optional<Product> existingProductOptional = productRepository.findById(id);
 
+        if (existingProductOptional.isPresent()) {
+            Product existingProduct = existingProductOptional.get();
+
+            // Create a StringBuilder to store the details of changes
+            StringBuilder changes = new StringBuilder();
+
+            // Compare and update the fields
+            if (!Objects.equals(request.getName(), existingProduct.getName())) {
+                changes.append("เปลี่ยนชื่อจาก ").append(existingProduct.getName()).append(" เป็น ").append(request.getName()).append(";");
+                existingProduct.setName(request.getName());
+            }
+
+            if (!Objects.equals(request.getDetail(), existingProduct.getDetail())) {
+                changes.append("เปลี่ยนรายละเอียดจาก ").append(existingProduct.getDetail()).append(" เป็น ").append(request.getDetail()).append(";");
+                existingProduct.setDetail(request.getDetail());
+            }
+
+            if (!Objects.equals(request.getStock(), existingProduct.getStock())) {
+                changes.append("เปลี่ยนจำนวนคลังสินค้า ").append(existingProduct.getStock()).append(" เป็น ").append(request.getStock()).append(";");
+                existingProduct.setStock(request.getStock());
+            }
+
+            if (!Objects.equals(request.getPrice(), existingProduct.getPrice())) {
+                changes.append("เปลี่ยนราคาสินค้า ").append(existingProduct.getPrice()).append(" เป็น ").append(request.getPrice()).append(";");
+                existingProduct.setPrice(request.getPrice());
+            }
+
+            if (!Objects.equals(request.getRequireProduct(), existingProduct.getRequireProduct())) {
+                changes.append("เปลี่ยนจำนวนต้องการมากสุด ").append(existingProduct.getRequireProduct()).append(" เป็น ").append(request.getRequireProduct()).append(";");
+                existingProduct.setRequireProduct(request.getRequireProduct());
+            }
+
+            // Retrieve the category with a safe optional handling
+            Category category = categoryRepository.findById(request.getCategoryId()).orElse(null);
+            if (category != null) {
+                existingProduct.setCategory(category);
+            }
+
+            // Check if the image is provided and update it
+            if (!file.isEmpty()) {
+                try {
+                    byte[] imageBytes = file.getBytes();
+                    String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+                    existingProduct.setImageFile(base64Image);
+                    changes.append("Image updated;");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // Save the updated product back to the database
+            productRepository.save(existingProduct);
+
+            // Save the change details to the ProductLog
+            if (changes.length() > 0) {
+                // Save History
+                productLogService.logIncrease(existingProduct, changes.toString(), username);
+            }
+        }
     }
-        existingProduct.setCategory(category);
-        // Save the updated product back to the database
-        productRepository.save(existingProduct);
-        // Save History
-        ProductLog history = new ProductLog();
-        history.setProductId(existingProduct.getId());
-        history.setProductName(existingProduct.getName());
-        history.setOperationType("EDIT");
-        history.setDetail(test);
-        history.setUser(username);
-        history.setTimestamp(new Date());
 
-        productLogRepository.save(history);
-
-}
     public boolean productNameIsExisted(ProductRequest productRequest) {
         Optional<Product> existingProduct = productRepository.findByName(productRequest.getName());
         return existingProduct.isPresent();
@@ -188,4 +185,5 @@ public class ProductService {
         return productRepository.findAll(pageable);
     }
 }
+
 
