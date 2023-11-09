@@ -38,13 +38,12 @@ public class Product {
     @NotNull
     private Category category;
     @Lob
-    @NotNull
     @Column(columnDefinition = "MEDIUMBLOB")
     private String  imageFile;
     @NotNull
     private StatusProduct statusProduct;
 
-    @ManyToOne
-    private PurchaseOrder purchaseOrder;
+//    @ManyToOne
+//    private PurchaseOrder purchaseOrder;
 
  }
