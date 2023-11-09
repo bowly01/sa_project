@@ -171,7 +171,7 @@ public class ProductService {
             // Save the change details to the ProductLog
             if (changes.length() > 0) {
                 // Save History
-                productLogService.logIncrease(existingProduct, changes.toString(), username);
+                productLogService.logUpdate(existingProduct, changes.toString(), username);
             }
         }
     }

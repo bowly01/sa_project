@@ -60,7 +60,7 @@ public class ProductController {
         }
 
         productService.editProduct(productRequest, imageFile, id,username);
-        return "redirect:/";
+        return "redirect:/inventory";
     }
     @GetMapping("/create")
     public String getProductForm(Model model,ProductRequest productRequest) {

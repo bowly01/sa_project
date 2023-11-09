@@ -77,16 +77,16 @@
         <div class="mb-3">
           <label for="inputPrice">ราคา</label>
 <!--          <input id="inputPrice" type="number" class="form-control" name="price"  pattern="[0-9]{7}+" required>-->
-          <input id="inputPrice" type="number" class="form-control" th:value="${products.price}" th:min="1" th:max="1000000" name="price" onchange="checkPrice()" pattern="[0-9]" autocomplete="off" required>
+          <input id="inputPrice" type="number" class="form-control" th:value="${products.price}" th:min="1" th:max="500" name="price" onchange="checkPrice()" pattern="[0-9]" autocomplete="off" required>
         </div>
         <div class="mb-3">
           <label for="inputRequire">จำนวนมากสุดที่ต้องการ</label>
-          <input id="inputRequire" type="number" class="form-control" th:value="${products.requireProduct}" th:min="1" th:max="1000000" name="requireProduct" onchange="checkRequire()" pattern="[0-9]" autocomplete="off" required>
+          <input id="inputRequire" type="number" class="form-control" th:value="${products.requireProduct}" th:min="1" th:max="500" name="requireProduct" onchange="checkRequire()" pattern="[0-9]" autocomplete="off" required>
 
         </div>
         <div class="mb-3">
           <label for="inputStock">จำนวนสินค้าคงคลัง</label>
-          <input id="inputStock" type="number" class="form-control" th:value="${products.stock}" th:min="1" th:max="1000000" name="stock" onchange="checkQuantity()" pattern="[0-9]" autocomplete="off" required>
+          <input id="inputStock" type="number" class="form-control" th:value="${products.stock}" th:min="1" th:max="500" name="stock" onchange="checkQuantity()" pattern="[0-9]" autocomplete="off" required>
         </div>
         <div class="mb-3">
         <input type="file" id="imageFile" name="imageFile" accept="image/*" th:value="${products.imageFile}">
@@ -129,22 +129,22 @@
   function checkQuantity() {
     var quantity = document.getElementById("inputStock").value;
 
-    if (quantity > 1000000) {
-      alert("จำนวนสินค้าเกิน 1000000 ชิ้น");
+    if (quantity > 500) {
+      alert("จำนวนสินค้าเกิน 500 ชิ้น");
     }
   }
   function checkRequire() {
     var quantity = document.getElementById("inputRequire").value;
 
-    if (quantity > 1000000) {
-      alert("จำนวนสินค้าเกิน 1000000 ชิ้น");
+    if (quantity > 500) {
+      alert("จำนวนสินค้าเกิน 500 ชิ้น");
     }
   }
   function checkPrice() {
     var quantity = document.getElementById("inputPrice").value;
 
-    if (quantity > 1000000) {
-      alert("ราคาเกิน 1000000 บาท");
+    if (quantity > 500) {
+      alert("ราคาเกิน 500 บาท");
     }
   }
 </script>

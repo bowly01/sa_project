@@ -59,7 +59,7 @@
                     </div><br>
 
                     <div class="d-xl-inline">
-                        <input id="inputQuantity" type="number" class="form-control d-xl-inline" name="stock" placeholder="จำนวนสินค้า" style="width: 40%" th:min="1" th:max="100000" onchange="checkQuantity()"autocomplete="off" pattern="[0-9]" required>
+                        <input id="inputQuantity" type="number" class="form-control d-xl-inline" name="stock" placeholder="จำนวนสินค้า" style="width: 40%" th:min="1" th:max="500" onchange="checkQuantity()"autocomplete="off" pattern="[0-9]" required>
 
                         <select class="form-control d-xl-inline" style="width: 40%" id="inputUnit" name="unitId" placeholder="หน่วย">
                             <option th:each="unit : ${units}" th:value="${unit.id}" th:text="${unit.name + ' (' + unit.quantity + ') จำนวนต่อหน่วย'}"></option>
@@ -105,8 +105,8 @@
     function checkQuantity() {
         var quantity = document.getElementById("inputStock").value;
 
-        if (quantity > 1000000) {
-            alert("จำนวนสินค้าเกิน 1000000 ชิ้น");
+        if (quantity > 500) {
+            alert("จำนวนสินค้าเกิน 500 ชิ้น");
         }
     }
 </script>

@@ -26,10 +26,13 @@ public class ProductLog {
     @Temporal(TemporalType.TIMESTAMP)
     private Date timestamp;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @NotNull
-    @JoinColumn(name = "product_id")
-    private Product product;
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @NotNull
+//    @JoinColumn(name = "product_id")
+//    private Product product;
+@ManyToOne
+@JoinColumn(name = "product_id")
+private Product product;
 
     // Constructors, getters, and setters
     // ที่ใช้เพื่อดึง product_name
