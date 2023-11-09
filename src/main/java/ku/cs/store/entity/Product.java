@@ -21,21 +21,27 @@ public class Product {
     @NotNull(message = "กรุณากรอกรายละเอียดสินค้า")
 
     private String detail;
-
+    @NotNull
     @Min(value = 1,message ="กรุณากรอกเลขมากกว่าเท่ากับ 1")
     private double price;
+    @NotNull
     @Min(value = 1,message = "กรุณากรอกเลขมากกว่าเท่ากับ 1")
     private int stock;
+    @NotNull
     @Min(value = 1,message = "กรุณากรอกเลขมากกว่าเท่ากับ 1")
     private int requireProduct;
 
     @ManyToOne
+    @NotNull
     private Unit unit;
     @ManyToOne
+    @NotNull
     private Category category;
     @Lob
+    @NotNull
     @Column(columnDefinition = "MEDIUMBLOB")
     private String  imageFile;
+    @NotNull
     private StatusProduct statusProduct;
 
     @ManyToOne

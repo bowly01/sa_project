@@ -1,6 +1,7 @@
 package ku.cs.store.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import ku.cs.store.common.StatusOrder;
 import lombok.Data;
 
@@ -17,8 +18,9 @@ public class PurchaseOrder {
     @GeneratedValue
     private UUID id;
 
-
+    @NotNull
     private LocalDateTime timestamp;
+    @NotNull
     private StatusOrder status;
 
 
@@ -31,6 +33,7 @@ public class PurchaseOrder {
         return total;
     }
     @ManyToOne
+    @NotNull
     private Member member;
 
     public StatusOrder getStatus() {
