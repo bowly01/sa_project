@@ -3,6 +3,7 @@ package ku.cs.store.service;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import ku.cs.store.common.OperationType;
+import ku.cs.store.common.StatusProduct;
 import ku.cs.store.entity.Product;
 import ku.cs.store.entity.ProductLog;
 import ku.cs.store.repository.ProductLogRepository;
@@ -26,12 +27,9 @@ public class ProductLogService {
 
     @Autowired
     private ModelMapper modelMapper;
-    public List<ProductLog> getHistoriesByOperationType(String operationType) {
-        if ("ALL".equals(operationType)) {
-            return productLogRepository.findAll();
-        } else {
+    public List<ProductLog> getHistoriesByOperationType(OperationType operationType) {
             return productLogRepository.findByOperationType(operationType);
-        }
+
     }
     public void logIncrease(Product product, String detail, String username) {
         ProductLog increaseLog = new ProductLog();

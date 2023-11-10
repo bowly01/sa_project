@@ -106,6 +106,6 @@ public class ProductController {
                                      Model model, Authentication authentication){
         String username = authentication.getName();
         productService.updateProductStatus(id,username);
-        return "redirect:/inventory";
+        return "redirect:/";
     }
 }

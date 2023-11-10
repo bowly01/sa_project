@@ -1,5 +1,7 @@
 package ku.cs.store.controller.stock;
 
+import ku.cs.store.common.OperationType;
+import ku.cs.store.common.StatusProduct;
 import ku.cs.store.entity.Product;
 import ku.cs.store.entity.ProductLog;
 import ku.cs.store.entity.Unit;
@@ -40,14 +42,13 @@ public class InventoryController {
 
         return "stock/inventory";
     }
-    @GetMapping("/history")
-    public String getHistory(@RequestParam(value = "operationType", required = false) String operationType,
-                             Model model){
-        List<ProductLog> productLogs = productLogService.getHistoriesByOperationType(operationType);
-        model.addAttribute("operationType", operationType);
-        model.addAttribute("histories",productLogs);
-        return "products/history";
-    }
+//    @GetMapping("/history")
+//    public String getHistory(OperationType operationType, Model model){
+//        List<ProductLog> productLogs = productLogService.getHistoriesByOperationType(operationType);
+////        model.addAttribute("operationType", operationType);
+//        model.addAttribute("productLogs",productLogs);
+//        return "products/history";
+//    }
     @GetMapping("/add/{id}")
     public String getProductToAdd(@PathVariable UUID id, Model model) {
         model.addAttribute("categories", categoryService.getAllCategories());

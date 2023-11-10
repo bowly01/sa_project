@@ -1,6 +1,8 @@
 package ku.cs.store.controller.stock;
 
+import ku.cs.store.common.StatusProduct;
 import ku.cs.store.model.AddCartRequest;
+import ku.cs.store.repository.ProductRepository;
 import ku.cs.store.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,12 +22,10 @@ import java.util.UUID;
 @Controller
 @RequestMapping("/orders")
 public class OrderController {
-
-
-
-
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private ProductRepository productRepository;
 
     @GetMapping
     public String viewCart(Model model) {
@@ -38,7 +38,7 @@ public class OrderController {
     public String submitOrder(Model model) {
         orderService.submitOrder();
         model.addAttribute("confirmOrder", true);
-        return "redirect:/";
+        return "home";
     }
 
 
@@ -51,7 +51,8 @@ public class OrderController {
         } catch (RuntimeException e) {
             String errorMessage = "ไม่สามารถเพิ่มสินค้าลงตะกร้าได้"; // ข้อความข้อผิดพลาด
             model.addAttribute("errorMessage", errorMessage);
-            return "redirect:/"; // กลับไปที่หน้าหลัก
+            model.addAttribute("products",productRepository.findByStatusProduct(StatusProduct.AVAILABLE));
+            return "home"; // กลับไปที่หน้าหลัก
         }
     }
 

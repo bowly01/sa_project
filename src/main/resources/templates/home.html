@@ -52,7 +52,7 @@
                         <div class="mb-1" style="display: inline-block">
                             <label for="inputQuantity">Quantity</label>
                             <input id="inputQuantity" type="number" class="form-control"
-                                   name="quantity"
+                                   name="quantity" th:min="1" th:max="100000"
                                    required>
                         </div>
                         <button id="submit-button" type="submit" class="btn btn-primary" >Add to Cart</button>

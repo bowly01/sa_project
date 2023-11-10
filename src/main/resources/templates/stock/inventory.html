@@ -29,6 +29,7 @@
         <thead class="thead-dark">
         <tr>
             <th>ชื่อสินค้า</th>
+            <th>สถานะ</th>
             <th>รูปภาพ</th>
             <th>ประเภทสินค้า</th>
             <th>รายละเอียดสินค้า</th>
@@ -41,8 +42,9 @@
         <tbody>
         <th:block th:if="${products != null}">
 
-            <tr th:each="product : ${products}">
+            <tr th:each="product : ${products}" th:if="${product.statusProduct == T(ku.cs.store.common.StatusProduct).AVAILABLE}">
                 <td th:text="${product.name}"></td>
+                <td th:text="${product.statusProduct}"></td>
                 <!-- Assuming your product object contains the Base64-encoded image -->
                 <td><img th:src="'data:image/jpeg;base64,' + ${product.imageFile}" alt="Image Description" style="width: 100px;height: 100px;"></td>
                 <td th:text="${product.getCategory().categoryName}"></td>

@@ -73,11 +73,11 @@
           </div>
           <div class="mb-3">
             <label for="inputPrice">ราคาสินค้า</label>
-            <input id="inputPrice" type="number" class="form-control" th:min="1" th:max="500" name="price" onchange="checkPrice()" pattern="[0-9]" autocomplete="off" required>
+            <input id="inputPrice" type="number" class="form-control" th:min="1" th:max="10000" name="price" onchange="checkPrice()" pattern="[0-9]" autocomplete="off" required>
 <!--            <div id="priceError" class="alert alert-danger" th:if="${priceError != null}"><span th:text="${priceError}"></span></div>-->
           </div>
           <div class="mb-3">
-            <label for="inputRequire">จำนวนสินค้าที่ต้องการ</label>
+            <label for="inputRequire">จำนวนสินค้ามากสุดที่ควรมีในคลัง</label>
             <input id="inputRequire" type="number" class="form-control"  th:min="1" th:max="500" name="requireProduct" onchange="checkRequire()" pattern="[0-9]" autocomplete="off" required>
 <!--            <div id="requireError" class="alert alert-danger" th:if="${requireError != null}"><span th:text="${requireError}"></span></div>-->
           </div>
@@ -135,8 +135,8 @@
   function checkPrice() {
     var quantity = document.getElementById("inputPrice").value;
 
-    if (quantity > 500) {
-      alert("ราคาเกิน 500 บาท");
+    if (quantity > 10000) {
+      alert("ราคาเกิน 10000 บาท");
     }
   }
 </script>

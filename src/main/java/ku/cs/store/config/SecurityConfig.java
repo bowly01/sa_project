@@ -26,10 +26,12 @@ public class SecurityConfig {
                         .requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/js/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/signup")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/productLog")).anonymous()
+
                         .requestMatchers(
-                                new AntPathRequestMatcher("/categories/add")).permitAll()
+                                new AntPathRequestMatcher("/categories")).anonymous()
                         .requestMatchers(
-                                new AntPathRequestMatcher("/products/create")).permitAll()
+                                new AntPathRequestMatcher("/products")).anonymous()
                         .requestMatchers(
                                 new AntPathRequestMatcher("/admin/**")).hasRole("ADMIN")
                         .anyRequest().authenticated()
